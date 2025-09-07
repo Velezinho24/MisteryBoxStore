@@ -23,6 +23,34 @@
 
   {% block extra_head %}{% endblock %}
 </head>
+
+<script>
+  (function () {
+    const alerts = document.querySelectorAll('#flash-messages .alert[data-auto-hide]');
+    alerts.forEach(function (el) {
+      const delay = parseInt(el.getAttribute('data-delay-ms') || '3500', 10);
+
+      // Usar la API de Bootstrap si está disponible para cerrar con animación
+      const closeWithBootstrap = function() {
+        try {
+          // Requiere que incluyas el bundle de Bootstrap en base.html (ya lo tienes)
+          const api = bootstrap.Alert.getOrCreateInstance(el);
+          api.close();
+        } catch (e) {
+          // Fallback sin Bootstrap (quita .show, espera transición y elimina)
+          el.classList.remove('show');
+          el.addEventListener('transitionend', function () {
+            if (el && el.parentNode) el.parentNode.removeChild(el);
+          }, { once: true });
+        }
+      };
+
+      setTimeout(closeWithBootstrap, delay);
+    });
+  })();
+</script>
+
+
 <body class="bg-black">
   <!-- Header / Navbar -->
   <header class="border-bottom border-danger-subtle bg-black bg-opacity-95">
@@ -61,15 +89,33 @@
             <option value="en" {% if LANGUAGE_CODE|slice:":2" == 'en' %}selected{% endif %}>{% trans "English" %}</option>
           </select>
         </form>
+
+        <div class="ms-auto d-flex">
+          {% if user.is_authenticated %}
+            <span class="navbar-text me-3">{% trans "Hi" %}, {{ user.username }}!</span>
+            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light">{% trans "Logout" %}</a>
+          {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-outline-light me-2">{% trans "Login" %}</a>
+            <a href="{% url 'accounts:register' %}" class="btn btn-danger">{% trans "Register" %}</a>
+          {% endif %}
+        </div>
       </div>
     </nav>
   </header>
 
   <!-- Mensajes flash -->
-  <div class="container mt-3">
+  <div id="flash-messages"
+      class="position-fixed start-50 translate-middle-x"
+      style="top: 80px; z-index: 1080; width: min(92vw, 560px);">
     {% if messages %}
       {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} mb-2" role="alert">{{ message }}</div>
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show py-2 px-3 my-2 text-center small"
+            role="status"
+            data-auto-hide="true"
+            data-delay-ms="3500">
+          {{ message }}
+          <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
       {% endfor %}
     {% endif %}
   </div>
