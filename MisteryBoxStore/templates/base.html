@@ -1,0 +1,131 @@
+    {% load i18n static %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{% trans "MysteryVault" %}{% endblock %}</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons (para íconos simples) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    /* Utilidades ligeras para fondos y animaciones suaves */
+    body { background-color: #000; color: #fff; }
+    .bg-soft-gradient {
+      background: radial-gradient(80% 80% at 50% 20%, rgba(220, 53, 69, 0.15), rgba(0,0,0,0.6) 60%), #000;
+    }
+    .hover-rise { transition: transform .2s ease, box-shadow .2s ease; }
+    .hover-rise:hover { transform: translateY(-4px); box-shadow: 0 0.5rem 1.5rem rgba(220,53,69,.25); }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-black">
+  <!-- Header / Navbar -->
+  <header class="border-bottom border-danger-subtle bg-black bg-opacity-95">
+    <nav class="navbar navbar-expand-lg navbar-dark container">
+      <a class="navbar-brand d-flex align-items-center" href="{% url 'mistery_boxes:list' %}">
+        <i class="bi bi-dice-1-fill text-danger fs-3 me-2"></i>
+        <span class="fw-bold">{% trans "MysteryVault" %}</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="{% trans 'Toggle navigation' %}">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div id="mainNav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/">{% trans "Home" %}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#boxes">{% trans "Mystery Boxes" %}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#how">{% trans "How It Works" %}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">{% trans "Contact" %}</a></li>
+          <li class="nav-item ms-lg-3">
+            <a class="btn btn-danger" href="{% url 'orders:list' %}">
+              <i class="bi bi-cart-fill me-1"></i>{% trans "Cart" %}
+            </a>
+          </li>
+        </ul>
+
+        <!-- Selector de idioma -->
+        <form action="{% url 'set_language' %}" method="post" class="ms-lg-3 d-flex align-items-center">
+          {% csrf_token %}
+          <input name="next" type="hidden" value="{{ request.path }}">
+          <label for="lang" class="me-2 mb-0 small text-secondary">{% trans "Language" %}</label>
+          <select name="language" id="lang" class="form-select form-select-sm bg-dark text-white border-secondary"
+                  onchange="this.form.submit()">
+            <option value="es" {% if LANGUAGE_CODE|slice:":2" == 'es' %}selected{% endif %}>{% trans "Spanish" %}</option>
+            <option value="en" {% if LANGUAGE_CODE|slice:":2" == 'en' %}selected{% endif %}>{% trans "English" %}</option>
+          </select>
+        </form>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mensajes flash -->
+  <div class="container mt-3">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-2" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Main -->
+  <main class="container py-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer id="contact" class="border-top border-danger-subtle bg-black py-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-12 col-md-4">
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-dice-1-fill text-danger fs-4 me-2"></i>
+            <span class="fs-5 fw-bold">{% trans "MysteryVault" %}</span>
+          </div>
+          <p class="text-secondary">{% trans "The ultimate destination for premium mystery boxes and surprise discoveries." %}</p>
+        </div>
+        <div class="col-6 col-md-2">
+          <h6 class="text-white fw-semibold mb-3">{% trans "Quick Links" %}</h6>
+          <ul class="list-unstyled small">
+            <li><a class="link-secondary link-underline-opacity-0" href="#boxes">{% trans "Mystery Boxes" %}</a></li>
+            <li><a class="link-secondary link-underline-opacity-0" href="#how">{% trans "How It Works" %}</a></li>
+            <li><a class="link-secondary link-underline-opacity-0" href="#winners">{% trans "Winners" %}</a></li>
+            <li><a class="link-secondary link-underline-opacity-0" href="#faq">{% trans "FAQ" %}</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h6 class="text-white fw-semibold mb-3">{% trans "Support" %}</h6>
+          <ul class="list-unstyled small">
+            <li><a class="link-secondary link-underline-opacity-0" href="#contact">{% trans "Contact Us" %}</a></li>
+            <li><a class="link-secondary link-underline-opacity-0" href="#shipping">{% trans "Shipping Info" %}</a></li>
+            <li><a class="link-secondary link-underline-opacity-0" href="#returns">{% trans "Returns" %}</a></li>
+            <li><a class="link-secondary link-underline-opacity-0" href="#terms">{% trans "Terms of Service" %}</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-3">
+          <h6 class="text-white fw-semibold mb-3">{% trans "Connect" %}</h6>
+          <div class="d-flex gap-3">
+            <a class="text-secondary" href="#" aria-label="{% trans 'Instagram' %}"><i class="bi bi-instagram fs-4"></i></a>
+            <a class="text-secondary" href="#" aria-label="{% trans 'Twitter' %}"><i class="bi bi-twitter-x fs-4"></i></a>
+            <a class="text-secondary" href="#" aria-label="{% trans 'YouTube' %}"><i class="bi bi-youtube fs-4"></i></a>
+            <a class="text-secondary" href="#" aria-label="{% trans 'Discord' %}"><i class="bi bi-discord fs-4"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-danger-subtle mt-4 pt-3 text-center text-secondary small">
+        <p class="mb-0">&copy; 2024 {% trans "MysteryVault. All rights reserved. Gamble responsibly." %}</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

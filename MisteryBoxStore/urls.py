@@ -16,12 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('catalog.urls'), name='home'),
-    path('accounts/', include('accounts.urls')),
-    path('orders/', include('orders.urls')),
-    path('payments/', include('payments.urls')),
-    path('mistery_boxes/', include('mistery_boxes.urls')),
+    path("i18n/", include("django.conf.urls.i18n")),  # set_language
+    path("admin/", admin.site.urls),
 ]
+
+urlpatterns += i18n_patterns(
+    path("", include(("MisteryBoxStore.home_urls", "home"), namespace="home")),
+    path("accounts/", include(("accounts.urls", "accounts"), namespace="accounts")),
+    path("catalog/", include(("catalog.urls", "catalog"), namespace="catalog")),
+    path("mistery-boxes/", include(("mistery_boxes.urls", "mistery_boxes"), namespace="mistery_boxes")),
+    path("orders/", include(("orders.urls", "orders"), namespace="orders")),
+    path("payments/", include(("payments.urls", "payments"), namespace="payments")),
+)
