@@ -11,11 +11,9 @@
         <div class="card-header text-white text-center bg-danger">
           <h3 class="h5 mb-0">{% trans "Login" %}</h3>
         </div>
-
         <div class="card-body p-4">
           <form method="post" novalidate>
             {% csrf_token %}
-
             <div class="mb-3">
               <label for="username" class="visually-hidden">{% trans "Username" %}</label>
               <input type="text"
