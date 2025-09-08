@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% load humanize %}
+
+{% block title %}{% trans "Catalog" %} · MysteryVault{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <!-- Sidebar filtros (en pantallas md+) -->
+  <aside class="col-12 col-lg-3 order-2 order-lg-1">
+    <div class="card bg-dark border-danger-subtle">
+      <div class="card-header bg-black border-danger-subtle">
+        <h2 class="h6 mb-0 text-white">{% trans "Filters" %}</h2>
+      </div>
+      <div class="card-body">
+        <form method="get" class="vstack gap-3" id="filters-form">
+
+          <!-- Búsqueda -->
+          <div>
+            <label for="id_q" class="form-label text-white">{% trans "Search" %}</label>
+            {{ form.q }}
+          </div>
+
+          <!-- Precio -->
+          <div>
+            <label class="form-label text-white">{% trans "Price range (COP)" %}</label>
+            <div class="row g-2">
+              <div class="col">
+                {{ form.price_min }}
+              </div>
+              <div class="col">
+                {{ form.price_max }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Tags -->
+          <div>
+            <span class="form-label d-block mb-2 text-white">{% trans "Tags" %}</span>
+            <div class="vstack gap-2">
+              {% for checkbox in form.tags %}
+              <div class="form-check">
+                {{ checkbox.tag }}
+                <label class="form-check-label text-white" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Orden -->
+          <div>
+            <label for="id_order" class="form-label text-white">{% trans "Order by" %}</label>
+            {{ form.order }}
+          </div>
+
+          <!-- Acciones -->
+          <div class="d-grid gap-2 mt-2">
+            <button type="submit" class="btn btn-danger">{% trans "Apply filters" %}</button>
+            <a href="{% url 'catalog:list' %}" class="btn btn-outline-light">{% trans "Clear" %}</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Listado -->
+  <section class="col-12 col-lg-9 order-1 order-lg-2">
+    <!-- Header listado -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <h1 class="h4 mb-1">{% trans "Catalog" %}</h1>
+        <div class="text-secondary small">
+          {% blocktrans %}Showing{% endblocktrans %} {{ page_obj.start_index }}–{{ page_obj.end_index }} / {{ total }}
+          {% if q %} · {% trans "Search:" %} “{{ q }}”{% endif %}
+        </div>
+      </div>
+      <div class="d-none d-lg-block">
+        <!-- botón alternativo para móviles -->
+        <a href="#filters-form" class="btn btn-outline-light btn-sm">{% trans "Adjust filters" %}</a>
+      </div>
+    </div>
+
+    <!-- Chips de tags activos -->
+    {% if active_tags %}
+    <div class="mb-3">
+      {% for t in active_tags %}
+        <span class="badge text-bg-dark border border-danger-subtle me-2">{{ t }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Grid de productos -->
+    <div class="row g-3">
+      {% for p in products %}
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card bg-dark border-danger-subtle h-100 hover-rise">
+          {% if p.image %}
+            <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}">
+          {% else %}
+            <img src="{% static 'img/placeholder-300x200.png' %}" class="card-img-top" alt="{{ p.name }}">
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h3 class="h6 mb-1 text-white">{{ p.name }}</h3>
+            <div class="small text-secondary mb-2">
+              {% if p.tags %}{{ p.tags }}{% endif %}
+            </div>
+            <div class="mt-auto d-flex align-items-center justify-content-between">
+              <div class="fw-bold text-danger">$ {{ p.price_cop|intcomma }}</div>
+              <a href="{% url 'mistery_boxes:list' %}" class="btn btn-outline-light btn-sm">
+                {% trans "Add to box" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="alert alert-dark border-danger-subtle text-center">
+          {% trans "No products match your filters." %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Paginación -->
+    {% if is_paginated %}
+    <nav class="mt-4" aria-label="{% trans 'Pagination' %}">
+      <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link bg-black text-white border-secondary"
+               href="?{% if request.GET %}{{ request.GET.urlencode|safe|cut:'page='|cut:'&page=' }}&{% endif %}page={{ page_obj.previous_page_number }}">
+              &laquo;
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link bg-black text-secondary border-secondary">&laquo;</span></li>
+        {% endif %}
+
+        {% for num in paginator.page_range %}
+          {% if num == page_obj.number %}
+            <li class="page-item active"><span class="page-link bg-danger border-danger">{{ num }}</span></li>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+              <a class="page-link bg-black text-white border-secondary"
+                 href="?{% if request.GET %}{{ request.GET.urlencode|safe|cut:'page='|cut:'&page=' }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link bg-black text-white border-secondary"
+               href="?{% if request.GET %}{{ request.GET.urlencode|safe|cut:'page='|cut:'&page=' }}&{% endif %}page={{ page_obj.next_page_number }}">
+              &raquo;
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link bg-black text-secondary border-secondary">&raquo;</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,7 +1,8 @@
 from django.urls import path
-from django.views.generic import TemplateView
+from .views import ProductListView
 
 app_name = "catalog"
+
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="catalog/index.html"), name="list"),
+    path("", ProductListView.as_view(), name="list"),
 ]
