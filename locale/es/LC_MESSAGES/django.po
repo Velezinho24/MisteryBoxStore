@@ -1,0 +1,767 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-12 07:11-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+#: MisteryBoxStore/templates/base.html:7 MisteryBoxStore/templates/base.html:60
+#: MisteryBoxStore/templates/base.html:135
+#: MisteryBoxStore/templates/pages/home.html:4
+msgid "MysteryVault"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:64
+msgid "Toggle navigation"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:70
+#: MisteryBoxStore/templates/pages/home.html:4
+msgid "Home"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:71
+#: catalog/templates/catalog/product_list.html:5
+#: catalog/templates/catalog/product_list.html:72
+msgid "Catalog"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:72
+#: MisteryBoxStore/templates/base.html:142
+#: mistery_boxes/templates/mysteryboxes/box_list.html:4
+msgid "Mystery Boxes"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:74
+#: mistery_boxes/templates/mysteryboxes/box_form.html:60
+msgid "Create Box"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:85
+msgid "Language"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:88
+msgid "Spanish"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:89
+msgid "English"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:93
+msgid "Hi"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:94
+#: MisteryBoxStore/templates/base.html:97
+msgid "Cart"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:95
+msgid "Logout"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:98
+#: accounts/templates/accounts/login.html:4
+#: accounts/templates/accounts/login.html:12
+msgid "Login"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:99
+#: accounts/templates/accounts/register.html:4
+msgid "Register"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:137
+msgid ""
+"The ultimate destination for premium mystery boxes and surprise discoveries."
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:140
+msgid "Quick Links"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:143
+#: MisteryBoxStore/templates/pages/home.html:211
+msgid "How It Works"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:144
+msgid "Winners"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:145
+msgid "FAQ"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:149
+#: MisteryBoxStore/templates/pages/home.html:50
+msgid "Support"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:151
+msgid "Contact Us"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:152
+msgid "Shipping Info"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:153
+msgid "Returns"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:154
+msgid "Terms of Service"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:158
+msgid "Connect"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:160
+msgid "Instagram"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:161
+msgid "Twitter"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:162
+msgid "YouTube"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:163
+msgid "Discord"
+msgstr ""
+
+#: MisteryBoxStore/templates/base.html:168
+msgid "MysteryVault. All rights reserved. Gamble responsibly."
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:15
+msgid "Premium Mystery Experience"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:17
+msgid "Unlock the Unknown"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:19
+msgid ""
+"Step into the world of premium mystery boxes. Every box is a gamble, every "
+"unboxing is a win. Discover exclusive items worth more than you pay."
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:23
+msgid "Explore Mystery Boxes"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:26
+msgid "Watch Unboxing"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:38
+msgid "Boxes Opened"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:42
+msgid "Satisfaction Rate"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:46
+msgid "Value Delivered"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:58
+#: mistery_boxes/templates/mysteryboxes/box_list.html:10
+msgid "Choose Your Mystery"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:60
+#: mistery_boxes/templates/mysteryboxes/box_list.html:12
+msgid ""
+"Each category offers unique surprises. The higher the stakes, the greater "
+"the rewards."
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:88
+msgid "Open Premium"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:90
+#: mistery_boxes/templates/mysteryboxes/box_list.html:51
+msgid "Open Box"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:100
+msgid "View All"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:110
+msgid "Individual Products"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:112
+msgid "Buy Direct or Gamble for Savings"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:114
+msgid ""
+"Purchase individual items at full price, or take a chance with our mystery "
+"boxes for incredible savings"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:122 MisteryBoxStore/views.py:17
+msgid "Designer Sneakers"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:124 MisteryBoxStore/views.py:16
+msgid "Limited Edition Sneakers"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:125 MisteryBoxStore/views.py:18
+msgid "Exclusive designer sneakers from top luxury brands"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:128
+#: MisteryBoxStore/templates/pages/home.html:155
+#: MisteryBoxStore/templates/pages/home.html:182
+msgid "Buy Now"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:132
+#: MisteryBoxStore/templates/pages/home.html:159
+#: MisteryBoxStore/templates/pages/home.html:186
+msgid "Found in Mystery Boxes:"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:135 MisteryBoxStore/views.py:21
+msgid "Fashion Mystery ($49)"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:136 MisteryBoxStore/views.py:21
+msgid "Save $131"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:139
+#: MisteryBoxStore/templates/pages/home.html:166
+#: MisteryBoxStore/templates/pages/home.html:193 MisteryBoxStore/views.py:22
+#: MisteryBoxStore/views.py:32 MisteryBoxStore/views.py:42
+msgid "Ultimate Mystery ($199)"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:140 MisteryBoxStore/views.py:22
+msgid "Guaranteed + More"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:149 MisteryBoxStore/views.py:27
+msgid "Wireless Earbuds"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:151 MisteryBoxStore/views.py:26
+msgid "Pro Wireless Earbuds"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:152 MisteryBoxStore/views.py:28
+msgid "Latest noise-canceling wireless earbuds with premium sound"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:162
+#: MisteryBoxStore/templates/pages/home.html:189 MisteryBoxStore/views.py:31
+#: MisteryBoxStore/views.py:41
+msgid "Tech Mystery ($99)"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:163 MisteryBoxStore/views.py:31
+msgid "Save $150"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:167 MisteryBoxStore/views.py:32
+msgid "Save $50"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:176 MisteryBoxStore/views.py:37
+msgid "Smart Watch"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:178 MisteryBoxStore/views.py:36
+msgid "Luxury Smart Watch"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:179 MisteryBoxStore/views.py:38
+msgid "Premium smartwatch with health tracking and luxury design"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:190 MisteryBoxStore/views.py:41
+msgid "Save $300"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:194 MisteryBoxStore/views.py:42
+msgid "Save $200"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:203
+msgid "View All Products"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:212
+msgid "Three simple steps to your next surprise"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:219
+msgid "Choose Your Box"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:220
+msgid "Select from our curated mystery box categories based on your interests"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:226
+msgid "Place Your Bet"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:227
+msgid "Complete your purchase and wait for the excitement to arrive"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:233
+msgid "Unbox & Win"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:234
+msgid "Experience the thrill of discovery with items worth more than you paid"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:242
+msgid "Winner Stories"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:243
+msgid "See what our lucky customers have won"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:254
+msgid ""
+"\"Got a $300 designer jacket in my $49 fashion box! This is incredible value."
+"\""
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:261
+msgid "Sarah M."
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:262
+msgid "Fashion Mystery Winner"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:276
+msgid ""
+"\"Unboxed the latest wireless earbuds worth $200 from my tech mystery box!\""
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:283
+msgid "Mike R."
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:284
+msgid "Tech Mystery Winner"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:298
+msgid ""
+"\"The premium box delivered! Got luxury items worth over $800. Best "
+"investment ever.\""
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:305
+msgid "Emma L."
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:306
+msgid "Premium Mystery Winner"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:318
+msgid "Ready to Take the Gamble?"
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:320
+msgid ""
+"Join thousands of winners who've discovered the thrill of mystery boxes. "
+"Your next big win is just one click away."
+msgstr ""
+
+#: MisteryBoxStore/templates/pages/home.html:323
+msgid "Start Your Mystery Journey"
+msgstr ""
+
+#: accounts/forms.py:10
+msgid "Enter a valid email address"
+msgstr ""
+
+#: accounts/forms.py:11
+msgid "Email"
+msgstr ""
+
+#: accounts/forms.py:18 accounts/forms.py:29
+#: accounts/templates/accounts/login.html:18
+#: accounts/templates/accounts/login.html:22
+msgid "Username"
+msgstr ""
+
+#: accounts/forms.py:19 accounts/forms.py:35
+#: accounts/templates/accounts/login.html:27
+#: accounts/templates/accounts/login.html:31
+msgid "Password"
+msgstr ""
+
+#: accounts/forms.py:20 accounts/forms.py:38
+msgid "Confirm password"
+msgstr ""
+
+#: accounts/forms.py:32
+msgid "you@example.com"
+msgstr ""
+
+#: accounts/templates/accounts/login.html:37
+msgid "Sign in"
+msgstr ""
+
+#: accounts/templates/accounts/login.html:45
+msgid "Don’t have an account?"
+msgstr ""
+
+#: accounts/templates/accounts/login.html:46
+msgid "Register here"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:12
+msgid "Create an Account"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:52
+msgid "At least 8 characters"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:53
+msgid "Contains an uppercase letter"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:54
+msgid "Contains a lowercase letter"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:55
+msgid "Contains a number"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:56
+#, python-format
+msgid "Contains a special character (!@#$%%^&* etc.)"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:68
+msgid "Passwords match"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:77
+msgid "Create account"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:85
+msgid "Already have an account?"
+msgstr ""
+
+#: accounts/templates/accounts/register.html:86
+msgid "Login here"
+msgstr ""
+
+#: accounts/views.py:21
+msgid "Your account has been created."
+msgstr ""
+
+#: accounts/views.py:40
+msgid "Welcome back!"
+msgstr ""
+
+#: accounts/views.py:42
+msgid "Invalid username or password"
+msgstr ""
+
+#: accounts/views.py:53
+msgid "You have been logged out."
+msgstr ""
+
+#: catalog/forms.py:5
+msgid "Clothing"
+msgstr ""
+
+#: catalog/forms.py:6
+msgid "Tech"
+msgstr ""
+
+#: catalog/forms.py:7
+msgid "Shoes"
+msgstr ""
+
+#: catalog/forms.py:8
+msgid "Sport"
+msgstr ""
+
+#: catalog/forms.py:9
+msgid "Gamer"
+msgstr ""
+
+#: catalog/forms.py:10
+msgid "Men"
+msgstr ""
+
+#: catalog/forms.py:11
+msgid "Women"
+msgstr ""
+
+#: catalog/forms.py:12
+msgid "Unisex"
+msgstr ""
+
+#: catalog/forms.py:13
+msgid "Outdoor"
+msgstr ""
+
+#: catalog/forms.py:14
+msgid "Casual"
+msgstr ""
+
+#: catalog/forms.py:15
+msgid "Premium"
+msgstr ""
+
+#: catalog/forms.py:16
+msgid "Running"
+msgstr ""
+
+#: catalog/forms.py:17
+msgid "Training"
+msgstr ""
+
+#: catalog/forms.py:21
+msgid "Relevance"
+msgstr ""
+
+#: catalog/forms.py:22
+msgid "Price: Low to High"
+msgstr ""
+
+#: catalog/forms.py:23
+msgid "Price: High to Low"
+msgstr ""
+
+#: catalog/forms.py:24
+msgid "Name A–Z"
+msgstr ""
+
+#: catalog/forms.py:25
+msgid "Name Z–A"
+msgstr ""
+
+#: catalog/forms.py:33 catalog/templates/catalog/product_list.html:20
+msgid "Search"
+msgstr ""
+
+#: catalog/forms.py:36
+msgid "Search products…"
+msgstr ""
+
+#: catalog/forms.py:42 catalog/templates/catalog/product_list.html:39
+msgid "Tags"
+msgstr ""
+
+#: catalog/forms.py:49
+msgid "Min price (COP)"
+msgstr ""
+
+#: catalog/forms.py:53
+msgid "Min"
+msgstr ""
+
+#: catalog/forms.py:59
+msgid "Max price (COP)"
+msgstr ""
+
+#: catalog/forms.py:63
+msgid "Max"
+msgstr ""
+
+#: catalog/forms.py:71 catalog/templates/catalog/product_list.html:52
+msgid "Order by"
+msgstr ""
+
+#: catalog/models.py:19
+msgid "Comma-separated tags"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:13
+msgid "Filters"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:26
+msgid "Price range (COP)"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:58
+msgid "Apply filters"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:59
+msgid "Clear"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:74
+msgid "Showing"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:75
+msgid "Search:"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:113
+msgid "Add to cart"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:123
+msgid "No products match your filters."
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:131
+msgid "Pagination"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_detail.html:13
+msgid "No description available."
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_detail.html:18
+msgid "Included products"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_detail.html:40
+msgid "This box has no products."
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_detail.html:53
+msgid "Add Mystery Box to cart"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:5
+#: mistery_boxes/templates/mysteryboxes/box_form.html:13
+msgid "Create Mystery Box"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:21
+msgid "Name"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:27
+msgid "Slug"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:33
+msgid "Description"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:39
+msgid "Price (COP)"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:45
+msgid "Image"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:51
+msgid "Products"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_form.html:63
+msgid "Cancel"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_list.html:49
+msgid "Unlock Premium"
+msgstr ""
+
+#: mistery_boxes/templates/mysteryboxes/box_list.html:60
+msgid "No mystery boxes yet."
+msgstr ""
+
+#: orders/templates/orders/cart.html:12
+msgid "Your Cart"
+msgstr ""
+
+#: orders/templates/orders/cart.html:24
+msgid "Item"
+msgstr ""
+
+#: orders/templates/orders/cart.html:25
+msgid "Price"
+msgstr ""
+
+#: orders/templates/orders/cart.html:26
+msgid "Quantity"
+msgstr ""
+
+#: orders/templates/orders/cart.html:27 orders/templates/orders/cart.html:64
+#: payments/templates/payments/checkout.html:39
+msgid "Total"
+msgstr ""
+
+#: orders/templates/orders/cart.html:41
+msgid "Update"
+msgstr ""
+
+#: orders/templates/orders/cart.html:63
+#: payments/templates/payments/checkout.html:29
+msgid "Subtotal"
+msgstr ""
+
+#: orders/templates/orders/cart.html:70
+msgid "Proceed to Payment"
+msgstr ""
+
+#: orders/templates/orders/cart.html:73
+msgid "Continue Shopping"
+msgstr ""
+
+#: orders/templates/orders/cart.html:81
+msgid "Your cart is empty."
+msgstr ""
+
+#: payments/templates/payments/checkout.html:12
+msgid "This is a simulated payment. No real charges will be made."
+msgstr ""
+
+#: payments/templates/payments/checkout.html:19
+msgid "Order Summary"
+msgstr ""
+
+#: payments/templates/payments/checkout.html:49
+msgid "Confirm Payment"
+msgstr ""
+
+#: payments/templates/payments/checkout.html:53
+msgid "Back to Cart"
+msgstr ""
