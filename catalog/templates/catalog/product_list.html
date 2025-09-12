@@ -77,7 +77,15 @@
       </div>
       <div class="d-none d-lg-block">
         <!-- botón alternativo para móviles -->
-        <a href="#filters-form" class="btn btn-outline-light btn-sm">{% trans "Adjust filters" %}</a>
+        <form method="post" action="{% url 'orders:add_to_cart' %}" class="d-inline">
+          {% csrf_token %}
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="id" value="{{ p.id }}">
+          <input type="hidden" name="qty" value="1">
+          <button type="submit" class="btn btn-danger btn-sm">
+            {% trans "Add to cart" %}
+          </button>
+        </form>
       </div>
     </div>
 

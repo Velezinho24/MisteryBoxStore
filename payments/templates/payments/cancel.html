@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Payment canceled{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h4 mb-3">Pago cancelado</h1>
+  {% if order_id %}<p>Order #{{ order_id }}</p>{% endif %}
+  <a href="{% url 'orders:cart_detail' %}" class="btn btn-outline-dark">Volver al carrito</a>
+</div>
+{% endblock %}

@@ -2,3 +2,5 @@ django
 autopep8
 flake8
 pillow
+stripe>=8.0.0
+reportlab>=4,<5

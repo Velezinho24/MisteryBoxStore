@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
+from orders.views import cart_detail
 
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),  # set_language
@@ -32,6 +33,7 @@ urlpatterns += i18n_patterns(
     path("mistery-boxes/", include(("mistery_boxes.urls", "mistery_boxes"), namespace="mistery_boxes")),
     path("orders/", include(("orders.urls", "orders"), namespace="orders")),
     path("payments/", include(("payments.urls", "payments"), namespace="payments")),
+    path("cart/", cart_detail, name="cart_root"),
 )
 
 

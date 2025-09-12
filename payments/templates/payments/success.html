@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Payment received{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h4 mb-3">Pago recibido</h1>
+  {% if order_id %}<p>Order #{{ order_id }}</p>{% endif %}
+  <p>Tu factura PDF se generó y quedó asociada a la orden.</p>
+  <a href="{% url 'home:home' %}" class="btn btn-outline-dark">Volver al inicio</a>
+</div>
+{% endblock %}
