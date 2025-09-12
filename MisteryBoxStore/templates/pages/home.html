@@ -65,30 +65,43 @@
     {% for b in boxes %}
     <div class="col-12 col-md-6 col-lg-3">
       <div class="card {% if b.premium %}border-danger{% else %}border-danger-subtle{% endif %} bg-dark hover-rise h-100 position-relative">
-        {% if b.badge %}
+
+        {% if b.premium %}
           <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill text-bg-danger">
-            {{ b.badge }}
+            Premium
           </span>
         {% endif %}
+
+        <!-- Imagen cuadrada -->
+        <div class="ratio ratio-1x1">
+          <img src="{{ b.image.url }}" alt="{{ b.name }}" class="card-img-top object-fit-cover rounded-top">
+        </div>
+
         <div class="card-body text-center">
-          <div class="rounded-circle bg-danger bg-opacity-25 d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
-            <i class="bi {{ b.icon }} fs-3 text-danger"></i>
-          </div>
           <h3 class="h5">{{ b.name }}</h3>
-          <p class="text-secondary">{{ b.desc }}</p>
+          <p class="text-secondary">{{ b.description }}</p>
           <p class="mb-3">
             <span class="fs-4 fw-bold text-danger">${{ b.price }}</span>
-            <span class="text-secondary ms-2">{{ b.value_text }}</span>
           </p>
           <a href="{% url 'mistery_boxes:detail' slug=b.slug %}" class="btn btn-danger w-100">
-            {% if b.premium %}<i class="bi bi-stars me-1"></i>{{ b.cta_premium }}{% else %}<i class="bi bi-lightning-charge-fill me-1"></i>{{ b.cta }}{% endif %}
+            {% if b.premium %}
+              <i class="bi bi-stars me-1"></i> {% trans "Open Premium" %}
+            {% else %}
+              <i class="bi bi-lightning-charge-fill me-1"></i> {% trans "Open Box" %}
+            {% endif %}
           </a>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
+  <div class="text-center mt-4">
+    <a href="{% url 'mistery_boxes:list' %}" class="btn btn-outline-danger">
+      {% trans "View All" %} <i class="bi bi-arrow-right ms-2"></i>
+    </a>
+  </div>
 </section>
+
 
 <!-- Individual Products (mock estatico para el landing) -->
 <section class="py-5">
@@ -186,7 +199,7 @@
   </div>
 
   <div class="text-center mt-4">
-    <a href="{% url 'mistery_boxes:list' %}" class="btn btn-outline-danger">
+    <a href="{% url 'catalog:list' %}" class="btn btn-outline-danger">
       {% trans "View All Products" %} <i class="bi bi-arrow-right ms-2"></i>
     </a>
   </div>

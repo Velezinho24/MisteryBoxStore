@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load i18n humanize static %}
+
+{% block title %}{% trans "Mystery Boxes" %}{% endblock %}
+
+{% block content %}
+<!-- Mystery Boxes -->
+<section id="boxes" class="py-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold display-6">{% trans "Choose Your Mystery" %}</h2>
+    <p class="lead text-secondary mx-auto" style="max-width: 700px;">
+      {% trans "Each category offers unique surprises. The higher the stakes, the greater the rewards." %}
+    </p>
+  </div>
+
+  <div class="row g-4">
+    {% for b in boxes %}
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card {% if b.premium %}border-danger{% else %}border-danger-subtle{% endif %} bg-dark hover-rise h-100 position-relative">
+
+        {% if b.badge %}
+          <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill text-bg-danger">
+            {{ b.badge }}
+          </span>
+        {% endif %}
+
+        <!-- Imagen cuadrada grande -->
+        <div class="ratio ratio-1x1">
+          {% if b.image %}
+            <img src="{{ b.image.url }}" class="card-img-top object-fit-cover" alt="{{ b.name }}">
+          {% else %}
+            <img src="{% static 'img/placeholder-300x300.png' %}" class="card-img-top object-fit-cover" alt="{{ b.name }}">
+          {% endif %}
+        </div>
+
+        <div class="card-body text-center d-flex flex-column">
+          <h3 class="h5 text-white">{{ b.name }}</h3>
+          <p class="text-secondary small">{{ b.description|default:"" }}</p>
+
+          <p class="mb-3">
+            <span class="fs-4 fw-bold text-danger">$ {{ b.price_cop|intcomma }}</span>
+            {% if b.value_text %}
+              <span class="text-secondary ms-2">{{ b.value_text }}</span>
+            {% endif %}
+          </p>
+
+          <a href="{% url 'mystery_boxes:detail' b.slug %}" class="btn btn-danger w-100 mt-auto">
+            {% if b.premium %}
+              <i class="bi bi-stars me-1"></i>{% trans "Unlock Premium" %}
+            {% else %}
+              <i class="bi bi-lightning-charge-fill me-1"></i>{% trans "Open Box" %}
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-dark border-danger-subtle text-center">
+        {% trans "No mystery boxes yet." %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

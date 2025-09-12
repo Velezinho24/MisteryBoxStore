@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block title %}{% trans "Create Mystery Box" %} · MysteryVault{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="mx-auto" style="max-width: 700px;">
+    <div class="card bg-dark border-danger-subtle shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="fw-bold text-white mb-4">
+          <i class="bi bi-box-seam me-2 text-danger"></i>{% trans "Create Mystery Box" %}
+        </h2>
+
+        <form method="post" enctype="multipart/form-data" class="needs-validation">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <div class="mb-3">
+            <label for="id_name" class="form-label fw-semibold text-white">{% trans "Name" %}</label>
+            {{ form.name|add_class:"form-control bg-dark text-white border-secondary" }}
+            <div class="text-danger small">{{ form.name.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_slug" class="form-label fw-semibold text-white">{% trans "Slug" %}</label>
+            {{ form.slug|add_class:"form-control bg-dark text-white border-secondary" }}
+            <div class="text-danger small">{{ form.slug.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_description" class="form-label fw-semibold text-white">{% trans "Description" %}</label>
+            {{ form.description|add_class:"form-control bg-dark text-white border-secondary" }}
+            <div class="text-danger small">{{ form.description.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_price_cop" class="form-label fw-semibold text-white">{% trans "Price (COP)" %}</label>
+            {{ form.price_cop|add_class:"form-control bg-dark text-white border-secondary" }}
+            <div class="text-danger small">{{ form.price_cop.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_image" class="form-label fw-semibold text-white">{% trans "Image" %}</label>
+            {{ form.image|add_class:"form-control bg-dark text-white border-secondary" }}
+            <div class="text-danger small">{{ form.image.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-white">{% trans "Products" %}</label>
+            <div class="form-check text-white">
+              {{ form.products }}
+            </div>
+            <div class="text-danger small">{{ form.products.errors }}</div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-check-circle me-1"></i>{% trans "Create Box" %}
+            </button>
+            <a href="{% url 'mistery_boxes:list' %}" class="btn btn-outline-light">
+              <i class="bi bi-x-circle me-1"></i>{% trans "Cancel" %}
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

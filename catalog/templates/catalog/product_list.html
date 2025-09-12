@@ -75,18 +75,6 @@
           {% if q %} · {% trans "Search:" %} “{{ q }}”{% endif %}
         </div>
       </div>
-      <div class="d-none d-lg-block">
-        <!-- botón alternativo para móviles -->
-        <form method="post" action="{% url 'orders:add_to_cart' %}" class="d-inline">
-          {% csrf_token %}
-          <input type="hidden" name="type" value="product">
-          <input type="hidden" name="id" value="{{ p.id }}">
-          <input type="hidden" name="qty" value="1">
-          <button type="submit" class="btn btn-danger btn-sm">
-            {% trans "Add to cart" %}
-          </button>
-        </form>
-      </div>
     </div>
 
     <!-- Chips de tags activos -->
@@ -115,9 +103,16 @@
             </div>
             <div class="mt-auto d-flex align-items-center justify-content-between">
               <div class="fw-bold text-danger">$ {{ p.price_cop|intcomma }}</div>
-              <a href="{% url 'mistery_boxes:list' %}" class="btn btn-outline-light btn-sm">
-                {% trans "Add to box" %}
-              </a>
+
+              <form method="post" action="{% url 'orders:add_to_cart' %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="content_type" value="catalog.product">
+                <input type="hidden" name="object_id" value="{{ p.id }}">
+                <input type="hidden" name="qty" value="1">
+                <button type="submit" class="btn btn-danger btn-sm">
+                  {% trans "Add to cart" %}
+                </button>
+              </form>
             </div>
           </div>
         </div>
