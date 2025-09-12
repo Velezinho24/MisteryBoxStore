@@ -68,13 +68,17 @@
 
         {% if b.premium %}
           <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill text-bg-danger">
-            Premium
+            {% trans "Premium" %}
           </span>
         {% endif %}
 
         <!-- Imagen cuadrada -->
         <div class="ratio ratio-1x1">
-          <img src="{{ b.image.url }}" alt="{{ b.name }}" class="card-img-top object-fit-cover rounded-top">
+          {% if b.image %}
+            <img src="{{ b.image.url }}" alt="{{ b.name }}" class="card-img-top object-fit-cover rounded-top">
+          {% else %}
+            <img src="{% static 'img/placeholder-600x600.png' %}" alt="{{ b.name }}" class="card-img-top object-fit-cover rounded-top">
+          {% endif %}
         </div>
 
         <div class="card-body text-center">
@@ -93,8 +97,15 @@
         </div>
       </div>
     </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-dark border-danger-subtle text-center">
+          {% trans "No boxes available at the moment." %}
+        </div>
+      </div>
     {% endfor %}
   </div>
+
   <div class="text-center mt-4">
     <a href="{% url 'mistery_boxes:list' %}" class="btn btn-outline-danger">
       {% trans "View All" %} <i class="bi bi-arrow-right ms-2"></i>
