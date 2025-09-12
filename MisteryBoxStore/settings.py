@@ -165,3 +165,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+STRIPE_SECRET_KEY = "sk_test_xxx_reemplaza_esto"
+STRIPE_WEBHOOK_SECRET = "whsec_xxx_reemplaza_esto"
+PAYMENTS_SUCCESS_URL = "/payments/checkout/success/"
+PAYMENTS_CANCEL_URL = "/payments/checkout/cancel/"
+
+USE_DUMMY_PAYMENTS = True
+DUMMY_GATEWAY_NAME = "dummy"

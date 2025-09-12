@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h4 mb-3">Checkout (simulado)</h1>
+
+  <div class="card bg-dark border-danger-subtle mb-3">
+    <div class="card-header bg-black border-danger-subtle">
+      <strong>Resumen de la orden #{{ order.id }}</strong>
+    </div>
+    <div class="card-body">
+      <ul class="list-unstyled mb-3">
+        {% for it in order.items.all %}
+          <li class="mb-1">
+            {{ it.name }} × {{ it.quantity }} — $ {{ it.unit_price_cop|intcomma }} COP
+            <br><small class="text-secondary">Subtotal: $ {{ it.line_total_cop|intcomma }} COP</small>
+          </li>
+        {% endfor %}
+      </ul>
+      <h5>Total: $ {{ order.total_cop|intcomma }} COP</h5>
+    </div>
+  </div>
+
+  <p class="text-secondary">Este es un pago de prueba (dummy). No se cobra nada real.</p>
+
+  <a class="btn btn-danger"
+     href="{% url 'payments:checkout_confirm_dummy' order.id %}">
+     Confirmar pago
+  </a>
+  <a class="btn btn-outline-light" href="{% url 'orders:cart_detail' %}">Volver al carrito</a>
+</div>
+{% endblock %}

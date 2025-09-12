@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n humanize static %}
+
+{% block title %}{% trans "Mystery Boxes" %}{% endblock %}
+
+{% block content %}
+<h1 class="h4 mb-3">{% trans "Mystery Boxes (Functional)" %}</h1>
+
+<div class="row g-3">
+  {% for box in boxes %}
+  <div class="col-12 col-sm-6 col-lg-4">
+    <div class="card bg-dark border-danger-subtle h-100">
+      {% if box.image %}
+        <img src="{{ box.image.url }}" class="card-img-top" alt="{{ box.name }}">
+      {% else %}
+        <img src="{% static 'img/placeholder-300x200.png' %}" class="card-img-top" alt="{{ box.name }}">
+      {% endif %}
+      <div class="card-body d-flex flex-column">
+        <h3 class="h6 mb-1 text-white">{{ box.name }}</h3>
+        <div class="small text-secondary mb-2">{{ box.description|default:"" }}</div>
+
+        <div class="mt-auto d-flex align-items-center justify-content-between">
+          <div class="fw-bold text-danger">$ {{ box.price_cop|intcomma }}</div>
+          <form method="post" action="{% url 'orders:add_to_cart' %}">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="box">
+            <input type="hidden" name="id" value="{{ box.id }}">
+            <input type="hidden" name="qty" value="1">
+            <button type="submit" class="btn btn-danger btn-sm">
+              {% trans "Add to cart" %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-dark border-danger-subtle text-center">
+      {% trans "No mystery boxes yet." %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
