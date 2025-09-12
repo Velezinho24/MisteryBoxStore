@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'orders',
     'payments',
     'mistery_boxes',
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [
