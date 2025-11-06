@@ -4,9 +4,12 @@ from .models import MysteryBox
 
 @admin.register(MysteryBox)
 class MysteryBoxAdmin(admin.ModelAdmin):
-    list_display = ("name", "price_cop", "get_products")
-    list_filter = ("products",)
+    list_display = ("name", "category", "price_cop", "is_active", "get_products_count")
+    list_filter = ("category", "is_active")
+    search_fields = ("name", "description")
+    prepopulated_fields = {"slug": ("name",)}
+    filter_horizontal = ("products",)
 
-    def get_products(self, obj):
-        return ", ".join([p.name for p in obj.products.all()])
-    get_products.short_description = "Productos"
+    def get_products_count(self, obj):
+        return obj.products.count()
+    get_products_count.short_description = "Productos"

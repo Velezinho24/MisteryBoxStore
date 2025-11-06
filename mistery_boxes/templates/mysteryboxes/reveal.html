@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+{% load i18n static humanize %}
+
+{% block title %}{% trans "Mystery Box Reveal" %} · MysteryVault{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      
+      <!-- Header -->
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-white mb-3">
+          <i class="bi bi-gift-fill text-danger me-3"></i>
+          {% trans "Opening Mystery Box" %}
+        </h1>
+        <p class="lead text-light" style="opacity: 0.85;">
+          {% trans "Let's see what you won!" %}
+        </p>
+      </div>
+
+      <!-- Slot Machine Animation -->
+      <div class="card bg-dark border-danger mb-5" id="slotMachine">
+        <div class="card-body p-5">
+          <div class="slot-container">
+            <div class="slot-reel" id="slotReel">
+              {% for product in all_possible_products %}
+              <div class="slot-item">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="slot-image">
+                <div class="slot-name">{{ product.name }}</div>
+                <div class="slot-price text-success fw-bold">$ {{ product.price_cop|intcomma }}</div>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="slot-pointer"></div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <button class="btn btn-danger btn-lg" id="spinButton" onclick="spinSlot()">
+              <i class="bi bi-play-circle-fill me-2"></i>{% trans "Reveal Prize" %}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result (initially hidden) -->
+      <div class="card bg-dark border-success d-none" id="resultCard">
+        <div class="card-body p-5 text-center">
+          <h2 class="h3 text-success mb-4">
+            <i class="bi bi-trophy-fill me-2"></i>{% trans "Congratulations!" %}
+          </h2>
+          
+          <div class="row align-items-center">
+            <div class="col-12 col-md-5">
+              <a href="{% url 'catalog:detail' won_product.slug %}" class="text-decoration-none d-block">
+                <img src="{{ won_product.image.url }}" alt="{{ won_product.name }}" 
+                     class="img-fluid rounded shadow-lg border border-success hover-rise" 
+                     style="max-height: 300px; object-fit: cover;">
+              </a>
+            </div>
+            <div class="col-12 col-md-7">
+              <a href="{% url 'catalog:detail' won_product.slug %}" class="text-decoration-none">
+                <h3 class="h4 text-white mb-3 hover-text-danger">{{ won_product.name }}</h3>
+              </a>
+              
+              {% if won_product.tags %}
+              <p class="text-light mb-3" style="opacity: 0.75;">
+                {{ won_product.tags }}
+              </p>
+              {% endif %}
+              
+              <div class="alert alert-success bg-success bg-opacity-10 border-success mb-4">
+                <div class="row g-3 text-center">
+                  <div class="col-6">
+                    <div class="small text-light mb-1">{% trans "You Paid" %}</div>
+                    <div class="h5 text-warning fw-bold mb-0">$ {{ item.unit_price_cop|intcomma }}</div>
+                  </div>
+                  <div class="col-6">
+                    <div class="small text-light mb-1">{% trans "Product Value" %}</div>
+                    <div class="h5 text-success fw-bold mb-0">$ {{ won_product.price_cop|intcomma }}</div>
+                  </div>
+                </div>
+                
+                {% if won_product.price_cop > item.unit_price_cop %}
+                <div class="text-center mt-3 pt-3 border-top border-success-subtle">
+                  <div class="small text-light mb-1">{% trans "You Won" %}</div>
+                  <div class="h4 fw-bold text-success mb-0">
+                    $ {{ won_product.price_cop|add:item.unit_price_cop|intcomma }}
+                    <span class="small">({% widthratio won_product.price_cop item.unit_price_cop 100 %}%)</span>
+                  </div>
+                </div>
+                {% elif won_product.price_cop == item.unit_price_cop %}
+                <div class="text-center mt-3 pt-3 border-top border-warning-subtle">
+                  <div class="h6 fw-bold text-warning mb-0">
+                    <i class="bi bi-check-circle-fill me-2"></i>{% trans "Exact Match!" %}
+                  </div>
+                </div>
+                {% else %}
+                <div class="text-center mt-3 pt-3 border-top border-info-subtle">
+                  <div class="small text-light mb-1">{% trans "Product Value" %}</div>
+                  <div class="h6 fw-bold text-info mb-0">
+                    {% trans "Still a great prize!" %}
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+
+              <div class="d-grid gap-2">
+                <a href="{% url 'catalog:detail' won_product.slug %}" class="btn btn-success">
+                  <i class="bi bi-eye me-2"></i>{% trans "View Product Details" %}
+                </a>
+                <a href="{% url 'payments:checkout_success' %}?order_id={{ order.id }}&download=1" class="btn btn-outline-warning">
+                  <i class="bi bi-download me-2"></i>{% trans "Download Invoice PDF" %}
+                </a>
+                <a href="{% url 'catalog:list' %}?q={{ won_product.name }}" class="btn btn-outline-success">
+                  <i class="bi bi-search me-2"></i>{% trans "View in Catalog" %}
+                </a>
+                <a href="{% url 'mystery_boxes:list' %}" class="btn btn-outline-light">
+                  <i class="bi bi-arrow-left me-2"></i>{% trans "Try Another Box" %}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-top border-secondary">
+            <div class="row text-center">
+              <div class="col-md-4 mb-3 mb-md-0">
+                <i class="bi bi-receipt-cutoff text-warning fs-3 mb-2 d-block"></i>
+                <small class="text-light">{% trans "Order" %} #{{ order.id }}</small>
+              </div>
+              <div class="col-md-4 mb-3 mb-md-0">
+                <i class="bi bi-check-circle-fill text-success fs-3 mb-2 d-block"></i>
+                <small class="text-light">{% trans "Payment Confirmed" %}</small>
+              </div>
+              <div class="col-md-4">
+                <i class="bi bi-envelope-fill text-info fs-3 mb-2 d-block"></i>
+                <small class="text-light">{% trans "Receipt sent to" %} {{ order.email }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.slot-container {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  border-radius: 15px;
+  border: 3px solid #dc3545;
+  box-shadow: inset 0 0 30px rgba(220, 53, 69, 0.3);
+}
+
+.slot-reel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.slot-item {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 2px solid rgba(220, 53, 69, 0.2);
+}
+
+.slot-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.slot-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.slot-price {
+  font-size: 1.5rem;
+}
+
+.slot-pointer {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #dc3545 50%, transparent 100%);
+  transform: translateY(-50%);
+  box-shadow: 0 0 20px #dc3545;
+  z-index: 10;
+}
+
+.slot-pointer::before,
+.slot-pointer::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  transform: translateY(-50%);
+}
+
+.slot-pointer::before {
+  left: 10px;
+  border-width: 10px 15px 10px 0;
+  border-color: transparent #dc3545 transparent transparent;
+}
+
+.slot-pointer::after {
+  right: 10px;
+  border-width: 10px 0 10px 15px;
+  border-color: transparent transparent transparent #dc3545;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+#spinButton:disabled {
+  animation: pulse 1s infinite;
+}
+</style>
+
+<script>
+let hasSpun = false;
+
+function spinSlot() {
+  if (hasSpun) return;
+  hasSpun = true;
+  
+  const button = document.getElementById('spinButton');
+  button.disabled = true;
+  button.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>{% trans "Spinning..." %}';
+  
+  const reel = document.getElementById('slotReel');
+  
+  // Find the index of the won product
+  let targetIndex = 0;
+  const wonProductId = {{ won_product.id }};
+  const productIds = [{% for product in all_possible_products %}{{ product.id }}{% if not forloop.last %},{% endif %}{% endfor %}];
+  
+  for (let i = 0; i < productIds.length; i++) {
+    if (productIds[i] === wonProductId) {
+      targetIndex = i;
+      break;
+    }
+  }
+  
+  // Calculate spin distance (multiple spins + land on target)
+  const extraSpins = 3 + Math.random() * 2; // 3-5 extra full spins
+  const totalItems = productIds.length;
+  const itemHeight = 400;
+  const totalSpins = Math.floor(extraSpins);
+  const targetOffset = targetIndex * itemHeight;
+  const totalDistance = (totalSpins * totalItems * itemHeight) + targetOffset;
+  
+  reel.style.transform = `translateY(-${totalDistance}px)`;
+  
+  // After animation, show result
+  setTimeout(() => {
+    document.getElementById('slotMachine').classList.add('d-none');
+    document.getElementById('resultCard').classList.remove('d-none');
+    
+    // Confetti effect
+    confetti();
+  }, 3200);
+}
+
+function confetti() {
+  const duration = 3 * 1000;
+  const animationEnd = Date.now() + duration;
+
+  const interval = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    // Create simple emoji confetti
+    for (let i = 0; i < 5; i++) {
+      const emoji = document.createElement('div');
+      const emojis = ['🎉', '🎊', '⭐', '✨', '🎁'];
+      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.position = 'fixed';
+      emoji.style.left = Math.random() * window.innerWidth + 'px';
+      emoji.style.top = '-50px';
+      emoji.style.fontSize = '24px';
+      emoji.style.zIndex = '9999';
+      emoji.style.pointerEvents = 'none';
+      document.body.appendChild(emoji);
+      
+      const fallDuration = 2 + Math.random() * 3;
+      emoji.style.transition = `all ${fallDuration}s ease-out`;
+      
+      setTimeout(() => {
+        emoji.style.top = window.innerHeight + 'px';
+        emoji.style.opacity = '0';
+        emoji.style.transform = `rotate(${Math.random() * 720}deg)`;
+      }, 10);
+      
+      setTimeout(() => {
+        emoji.remove();
+      }, fallDuration * 1000);
+    }
+  }, 250);
+}
+</script>
+{% endblock %}

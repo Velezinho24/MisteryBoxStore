@@ -1,59 +1,135 @@
 {% extends "base.html" %}
-{% load i18n static %}
-{% load humanize %}
+{% load i18n static humanize %}
 
-{% block title %}{{ box.name }} · MysteryVault{% endblock %}
+{% block title %}{{ box.name }} · {% trans "Mystery Boxes" %} · MysteryVault{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-
-  <!-- Header de la caja -->
-  <div class="text-center mb-4">
-    <h1 class="h3 text-white">{{ box.name }}</h1>
-    <p class="text-secondary">{{ box.description|default:_("No description available.") }}</p>
-    <h4 class="fw-bold text-danger">$ {{ box.price_cop|intcomma }}</h4>
-  </div>
-
-  <!-- Grid de productos incluidos -->
-  <h4 class="text-white mb-3">{% trans "Included products" %}</h4>
-  <div class="row g-3">
-    {% for p in products %}
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card bg-dark border-danger-subtle h-100 hover-rise">
-        {% if p.image %}
-          <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}">
-        {% else %}
-          <img src="{% static 'img/placeholder-300x200.png' %}" class="card-img-top" alt="{{ p.name }}">
-        {% endif %}
-        <div class="card-body d-flex flex-column">
-          <h3 class="h6 mb-1 text-white">{{ p.name }}</h3>
-          <div class="small text-secondary mb-2">
-            {% if p.tags %}{{ p.tags }}{% endif %}
+<div class="row g-4">
+  <div class="col-12 col-lg-5">
+    <div class="sticky-top" style="top: 20px;">
+      <div class="card bg-dark border-danger-subtle mb-4">
+        <img src="{{ box.image.url }}" class="card-img-top" alt="{{ box.name }}" style="object-fit: cover; height: 350px;">
+        <div class="card-body">
+          {% if box.category %}
+          <div class="mb-3">
+            <span class="badge bg-danger text-white">
+              <i class="bi bi-tag-fill me-1"></i>{{ box.category.name }}
+            </span>
           </div>
-          <div class="mt-auto fw-bold text-danger">$ {{ p.price_cop|intcomma }}</div>
+          {% endif %}
+          <h1 class="h3 text-white mb-3">{{ box.name }}</h1>
+          <p class="text-light mb-4" style="opacity: 0.85;">{{ box.description }}</p>
+          <div class="mb-4 pb-4 border-bottom border-secondary">
+            {% if box.is_active %}
+              <div class="d-flex align-items-center text-success">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <span class="fw-semibold">{% trans "Available" %}</span>
+              </div>
+            {% else %}
+              <div class="d-flex align-items-center text-warning">
+                <i class="bi bi-exclamation-circle-fill me-2 fs-5"></i>
+                <span class="fw-semibold">{% trans "Out of stock" %}</span>
+              </div>
+            {% endif %}
+          </div>
+          <div class="alert alert-danger bg-danger bg-opacity-10 border-danger mb-4">
+            <div class="row g-3 text-center">
+              <div class="col-6">
+                <div class="small text-light mb-1" style="opacity: 0.7;">{% trans "Mystery Box Price" %}</div>
+                <div class="h4 text-danger fw-bold mb-0">$ {{ box.price_cop|intcomma }}</div>
+              </div>
+              <div class="col-6">
+                <div class="small text-light mb-1" style="opacity: 0.7;">{% trans "Total Value" %}</div>
+                <div class="h4 text-success fw-bold mb-0">$ {{ total_value|intcomma }}</div>
+              </div>
+            </div>
+            {% if savings > 0 %}
+            <div class="text-center mt-3 pt-3 border-top border-danger-subtle">
+              <div class="small text-light mb-1">{% trans "Potential Savings" %}</div>
+              <div class="fs-5 fw-bold text-warning">
+                $ {{ savings|intcomma }} 
+                <span class="small">({{ savings_percentage|floatformat:0 }}%)</span>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          <div class="d-grid gap-2">
+            {% if box.is_active %}
+            <form method="post" action="{% url 'mystery_boxes:buy' box.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-lg w-100">
+                <i class="bi bi-lightning-fill me-2"></i>{% trans "Buy Now" %}
+              </button>
+            </form>
+            {% else %}
+            <button class="btn btn-secondary btn-lg w-100" disabled>
+              <i class="bi bi-x-circle me-2"></i>{% trans "Not available" %}
+            </button>
+            {% endif %}
+            <a href="{% url 'mistery_boxes:list' %}" class="btn btn-outline-light">
+              <i class="bi bi-arrow-left me-1"></i>{% trans "Back to boxes" %}
+            </a>
+          </div>
         </div>
       </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-      <div class="alert alert-dark border-danger-subtle text-center">
-        {% trans "This box has no products." %}
+  </div>
+  <div class="col-12 col-lg-7">
+    <div class="card bg-dark border-danger-subtle">
+      <div class="card-header bg-danger bg-opacity-10 border-danger-subtle">
+        <h2 class="h5 mb-0 text-white">
+          <i class="bi bi-box-seam me-2"></i>
+          {% trans "Possible products" %} ({{ box.products.count }})
+        </h2>
+      </div>
+      <div class="card-body">
+        <p class="text-light mb-4" style="opacity: 0.75;">
+          <i class="bi bi-info-circle me-1"></i>
+          {% trans "When you purchase this mystery box, you will randomly receive ONE of these products:" %}
+        </p>
+        <div class="row g-3">
+          {% for product in products %}
+          <div class="col-12 col-sm-6">
+            <div class="card bg-black bg-opacity-25 border-secondary h-100">
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="object-fit: cover; height: 160px;">
+              <div class="card-body">
+                <h3 class="h6 mb-2 text-white">{{ product.name }}</h3>
+                {% if product.tags %}
+                <div class="small text-light mb-3" style="opacity: 0.6;">{{ product.tags|truncatewords:3 }}</div>
+                {% endif %}
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="fw-bold text-success">$ {{ product.price_cop|intcomma }}</div>
+                  {% if product.price_cop > box.price_cop %}
+                    <span class="badge bg-success-subtle text-success border border-success">
+                      <i class="bi bi-arrow-up-circle-fill me-1"></i>+{{ product.price_cop|floatformat:0 }}%
+                    </span>
+                  {% endif %}
+                </div>
+                <div class="mt-2">
+                  <a href="{% url 'catalog:list' %}?q={{ product.name }}" class="small text-decoration-none text-danger">
+                    {% trans "View in catalog" %} <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
-    {% endfor %}
+    <div class="card bg-dark border-warning-subtle mt-4">
+      <div class="card-body">
+        <h3 class="h6 text-warning mb-3">
+          <i class="bi bi-lightbulb-fill me-2"></i>{% trans "How it works" %}
+        </h3>
+        <ul class="text-light small mb-0" style="opacity: 0.85;">
+          <li class="mb-2">{% trans "You pay the mystery box price and we randomly select one product from the list" %}</li>
+          <li class="mb-2">{% trans "All products have the same probability of being selected" %}</li>
+          <li class="mb-2">{% trans "The product you receive can be worth more or less than the box price" %}</li>
+          <li>{% trans "It's a surprise! You won't know which product you'll get until you open it" %}</li>
+        </ul>
+      </div>
+    </div>
   </div>
-
-  <!-- Botón para añadir la caja al carrito -->
-  <div class="text-center mt-4">
-    <form method="post" action="{% url 'orders:add_to_cart' %}">
-      {% csrf_token %}
-      <input type="hidden" name="type" value="mysterybox">
-      <input type="hidden" name="id" value="{{ box.id }}">
-      <button type="submit" class="btn btn-danger btn-lg">
-        <i class="bi bi-gift"></i> {% trans "Add Mystery Box to cart" %}
-      </button>
-    </form>
-  </div>
-
 </div>
 {% endblock %}

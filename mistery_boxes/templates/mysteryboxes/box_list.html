@@ -1,66 +1,118 @@
 {% extends "base.html" %}
-{% load i18n humanize static %}
+{% load i18n static humanize %}
 
-{% block title %}{% trans "Mystery Boxes" %}{% endblock %}
+{% block title %}{% trans "Mystery Boxes" %} · MysteryVault{% endblock %}
 
 {% block content %}
-<!-- Mystery Boxes -->
-<section id="boxes" class="py-5">
-  <div class="text-center mb-4">
-    <h2 class="fw-bold display-6">{% trans "Choose Your Mystery" %}</h2>
-    <p class="lead text-secondary mx-auto" style="max-width: 700px;">
-      {% trans "Each category offers unique surprises. The higher the stakes, the greater the rewards." %}
-    </p>
+<section class="text-center mb-5 pb-4 border-bottom border-danger-subtle">
+  <div class="mb-4">
+    <i class="bi bi-gift-fill text-danger" style="font-size: 4rem;"></i>
   </div>
+  <h1 class="display-5 fw-bold text-white mb-3">{% trans "Mystery Boxes" %}</h1>
+  <p class="lead text-light mb-0" style="max-width: 700px; margin: 0 auto; opacity: 0.85;">
+    {% trans "Choose a box and get random products worth up to 25% more than what you pay. Every box is a surprise!" %}
+  </p>
+</section>
 
-  <div class="row g-4">
-    {% for b in boxes %}
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card {% if b.premium %}border-danger{% else %}border-danger-subtle{% endif %} bg-dark hover-rise h-100 position-relative">
-
-        {% if b.badge %}
-          <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill text-bg-danger">
-            {{ b.badge }}
-          </span>
-        {% endif %}
-
-        <!-- Imagen cuadrada grande -->
-        <div class="ratio ratio-1x1">
-          {% if b.image %}
-            <img src="{{ b.image.url }}" class="card-img-top object-fit-cover" alt="{{ b.name }}">
+<div class="row g-4 mb-5">
+  {% for box in boxes %}
+  <div class="col-12 col-md-6 col-xl-4">
+    <div class="card bg-dark border-danger-subtle h-100 position-relative">
+      {% if box.category %}
+      <div class="position-absolute top-0 start-0 m-3" style="z-index: 10;">
+        <span class="badge bg-danger text-white shadow-sm">
+          <i class="bi bi-tag-fill me-1"></i>{{ box.category.name }}
+        </span>
+      </div>
+      {% endif %}
+      <img src="{{ box.image.url }}" class="card-img-top" alt="{{ box.name }}" style="object-fit: cover; height: 240px;">
+      <div class="card-body d-flex flex-column">
+        <h2 class="h5 mb-2 text-white">{{ box.name }}</h2>
+        <p class="text-light small mb-3" style="opacity: 0.75;">{{ box.description|truncatewords:20 }}</p>
+        <div class="small mb-3 pb-3 border-bottom border-secondary">
+          <div class="d-flex align-items-center text-light mb-1" style="opacity: 0.7;">
+            <i class="bi bi-box-seam me-2 text-danger"></i>
+            <span>{% trans "Contains" %} <strong class="text-white">{{ box.products.count }}</strong> {% trans "products" %}</span>
+          </div>
+          {% if box.is_active %}
+            <div class="d-flex align-items-center text-success small">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              <span>{% trans "Available" %}</span>
+            </div>
           {% else %}
-            <img src="{% static 'img/placeholder-300x300.png' %}" class="card-img-top object-fit-cover" alt="{{ b.name }}">
+            <div class="d-flex align-items-center text-warning small">
+              <i class="bi bi-exclamation-circle-fill me-2"></i>
+              <span>{% trans "Out of stock" %}</span>
+            </div>
           {% endif %}
         </div>
-
-        <div class="card-body text-center d-flex flex-column">
-          <h3 class="h5 text-white">{{ b.name }}</h3>
-          <p class="text-secondary small">{{ b.description|default:"" }}</p>
-
-          <p class="mb-3">
-            <span class="fs-4 fw-bold text-danger">$ {{ b.price_cop|intcomma }}</span>
-            {% if b.value_text %}
-              <span class="text-secondary ms-2">{{ b.value_text }}</span>
-            {% endif %}
-          </p>
-
-          <a href="{% url 'mystery_boxes:detail' b.slug %}" class="btn btn-danger w-100 mt-auto">
-            {% if b.premium %}
-              <i class="bi bi-stars me-1"></i>{% trans "Unlock Premium" %}
+        <div class="mt-auto">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+              <div class="small text-light" style="opacity: 0.6;">{% trans "Mystery Box Price" %}</div>
+              <div class="h4 mb-0 text-danger fw-bold">$ {{ box.price_cop|intcomma }}</div>
+            </div>
+          </div>
+          <div class="d-grid gap-2">
+            <a href="{% url 'mistery_boxes:detail' box.slug %}" class="btn btn-outline-danger">
+              <i class="bi bi-eye me-1"></i>{% trans "View details" %}
+            </a>
+            {% if box.is_active %}
+            <form method="post" action="{% url 'mystery_boxes:buy' box.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger w-100">
+                <i class="bi bi-lightning-fill me-1"></i>{% trans "Buy Now" %}
+              </button>
+            </form>
             {% else %}
-              <i class="bi bi-lightning-charge-fill me-1"></i>{% trans "Open Box" %}
+            <button class="btn btn-secondary w-100" disabled>
+              <i class="bi bi-x-circle me-1"></i>{% trans "Not available" %}
+            </button>
             {% endif %}
-          </a>
+          </div>
         </div>
       </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-      <div class="alert alert-dark border-danger-subtle text-center">
-        {% trans "No mystery boxes yet." %}
-      </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-warning text-center">
+      <i class="bi bi-exclamation-triangle me-2"></i>{% trans "There are no mystery boxes available at the moment." %}
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+
+<section class="text-center py-5 bg-danger bg-opacity-10 rounded-3 border border-danger-subtle">
+  <h2 class="h4 text-white mb-3">{% trans "How do Mystery Boxes work?" %}</h2>
+  <div class="row g-4 justify-content-center">
+    <div class="col-12 col-md-4">
+      <div class="mb-3">
+        <i class="bi bi-cart-check-fill text-danger" style="font-size: 2.5rem;"></i>
+      </div>
+      <h3 class="h6 text-white mb-2">{% trans "1. Choose and buy" %}</h3>
+      <p class="small text-light mb-0" style="opacity: 0.75;">
+        {% trans "Select the mystery box that interests you and add it to your cart" %}
+      </p>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="mb-3">
+        <i class="bi bi-gift-fill text-danger" style="font-size: 2.5rem;"></i>
+      </div>
+      <h3 class="h6 text-white mb-2">{% trans "2. Receive your prize" %}</h3>
+      <p class="small text-light mb-0" style="opacity: 0.75;">
+        {% trans "We randomly select one of the products from the box" %}
+      </p>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="mb-3">
+        <i class="bi bi-emoji-smile-fill text-danger" style="font-size: 2.5rem;"></i>
+      </div>
+      <h3 class="h6 text-white mb-2">{% trans "3. Enjoy!" %}</h3>
+      <p class="small text-light mb-0" style="opacity: 0.75;">
+        {% trans "The product can be worth up to 25% more than what you paid" %}
+      </p>
+    </div>
   </div>
 </section>
 {% endblock %}
