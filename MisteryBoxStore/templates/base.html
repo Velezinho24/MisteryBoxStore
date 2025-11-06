@@ -55,7 +55,7 @@
   <!-- Header / Navbar -->
   <header class="border-bottom border-danger-subtle bg-black bg-opacity-95">
     <nav class="navbar navbar-expand-lg navbar-dark container">
-      <a class="navbar-brand d-flex align-items-center" href="{% url 'mistery_boxes:list' %}">
+      <a class="navbar-brand d-flex align-items-center" href="/">
         <i class="bi bi-dice-1-fill text-danger fs-3 me-2"></i>
         <span class="fw-bold">{% trans "MysteryVault" %}</span>
       </a>
@@ -68,33 +68,33 @@
       <div id="mainNav" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link" href="/">{% trans "Home" %}</a></li>
-          <li class="nav-item"><a class="nav-link" href="#boxes">{% trans "Mystery Boxes" %}</a></li>
-          <li class="nav-item"><a class="nav-link" href="#how">{% trans "How It Works" %}</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'catalog:list' %}">{% trans "Catalog" %}</a></li>
-          <li class="nav-item ms-lg-3">
-            <a href="{% url 'orders:list' %}" class="btn btn-danger">
-              <i class="bi bi-cart-fill me-1"></i>{% trans "Cart" %}
-            </a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'mistery_boxes:list' %}">{% trans "Mystery Boxes" %}</a></li>
+          {% if user.is_staff %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'mistery_boxes:create' %}">{% trans "Create Box" %}</a></li>
+          {% endif %}
         </ul>
 
-        <!-- Selector de idioma -->
-        <form action="{% url 'set_language' %}" method="post" class="ms-lg-3 d-flex align-items-center">
-          {% csrf_token %}
-          <input name="next" type="hidden" value="{{ request.path }}">
-          <label for="lang" class="me-2 mb-0 small text-secondary">{% trans "Language" %}</label>
-          <select name="language" id="lang" class="form-select form-select-sm bg-dark text-white border-secondary"
-                  onchange="this.form.submit()">
-            <option value="es" {% if LANGUAGE_CODE|slice:":2" == 'es' %}selected{% endif %}>{% trans "Spanish" %}</option>
-            <option value="en" {% if LANGUAGE_CODE|slice:":2" == 'en' %}selected{% endif %}>{% trans "English" %}</option>
-          </select>
-        </form>
+        
 
         <div class="ms-auto d-flex">
+          <!-- Selector de idioma -->
+          <form action="{% url 'set_language' %}" method="post" class="ms-lg-3 d-flex align-items-center me-3">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <label for="lang" class="me-2 mb-0 small text-secondary">{% trans "Language" %}</label>
+            <select name="language" id="lang" class="form-select form-select-sm bg-dark text-white border-secondary"
+                    onchange="this.form.submit()">
+              <option value="es" {% if LANGUAGE_CODE|slice:":2" == 'es' %}selected{% endif %}>{% trans "Spanish" %}</option>
+              <option value="en" {% if LANGUAGE_CODE|slice:":2" == 'en' %}selected{% endif %}>{% trans "English" %}</option>
+            </select>
+          </form>
           {% if user.is_authenticated %}
             <span class="navbar-text me-3">{% trans "Hi" %}, {{ user.username }}!</span>
+            <a href="{% url 'orders:list' %}" class="btn btn-danger" style="margin-right: 10px;">{% trans "Cart" %}</a>
             <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light">{% trans "Logout" %}</a>
           {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-danger" style="margin-right: 10px;">{% trans "Cart" %}</a>
             <a href="{% url 'accounts:login' %}" class="btn btn-outline-light me-2">{% trans "Login" %}</a>
             <a href="{% url 'accounts:register' %}" class="btn btn-danger">{% trans "Register" %}</a>
           {% endif %}

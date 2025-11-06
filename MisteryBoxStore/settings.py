@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'orders',
     'payments',
     'mistery_boxes',
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [
@@ -127,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "es"
 LANGUAGES = [
-    ("es", "Spanish"),
+    ("es", "Español"),
     ("en", "English"),
 ]
 LOCALE_PATHS = [BASE_DIR / "locale"]
