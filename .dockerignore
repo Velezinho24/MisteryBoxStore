@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.log
+*.env
+venv/
+.venv/
+.git/
+.gitignore
+media/
+staticfiles/
+node_modules/
+__MACOSX/

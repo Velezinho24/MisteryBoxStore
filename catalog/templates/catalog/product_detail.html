@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% load i18n static humanize %}
+
+{% block title %}{{ product.name }} · {% trans "Products" %} · MysteryVault{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-5">
+  <!-- Columna izquierda: Imagen -->
+  <div class="col-12 col-lg-5">
+    <div class="sticky-top" style="top: 20px;">
+      <div class="card bg-dark border-danger-subtle">
+        <img src="{{ product.image.url }}" 
+             class="card-img-top" 
+             alt="{{ product.name }}"
+             style="object-fit: contain; height: 500px; padding: 20px;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna derecha: Información -->
+  <div class="col-12 col-lg-7">
+    <div class="mb-4">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home:home' %}" class="text-danger text-decoration-none">{% trans "Home" %}</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'catalog:list' %}" class="text-danger text-decoration-none">{% trans "Catalog" %}</a></li>
+          {% if product.category %}
+          <li class="breadcrumb-item"><a href="{% url 'catalog:list' %}?category={{ product.category.id }}" class="text-danger text-decoration-none">{{ product.category.name }}</a></li>
+          {% endif %}
+          <li class="breadcrumb-item active text-light" aria-current="page">{{ product.name|truncatewords:5 }}</li>
+        </ol>
+      </nav>
+
+      <!-- Categoría -->
+      {% if product.category %}
+      <div class="mb-3">
+        <span class="badge bg-danger text-white">
+          <i class="bi bi-tag-fill me-1"></i>{{ product.category.name }}
+        </span>
+      </div>
+      {% endif %}
+
+      <!-- Título -->
+      <h1 class="display-5 fw-bold text-white mb-3">{{ product.name }}</h1>
+
+      <!-- Tags -->
+      {% if product.tags %}
+      <div class="mb-4">
+        {% for tag in product.tags.split %}
+          <span class="badge bg-secondary text-white me-1 mb-1">{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Precio y disponibilidad -->
+      <div class="card bg-danger bg-opacity-10 border-danger mb-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <div class="h2 text-danger fw-bold mb-0">$ {{ product.price_cop|intcomma }}</div>
+              <small class="text-light" style="opacity: 0.7;">COP</small>
+            </div>
+            <div class="col">
+              {% if product.is_active %}
+                <div class="d-flex align-items-center text-success">
+                  <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                  <span class="fw-semibold">{% trans "In Stock" %}</span>
+                </div>
+              {% else %}
+                <div class="d-flex align-items-center text-warning">
+                  <i class="bi bi-exclamation-circle-fill me-2 fs-5"></i>
+                  <span class="fw-semibold">{% trans "Out of Stock" %}</span>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="card bg-dark border-secondary mb-4">
+        <div class="card-body">
+          <form method="post" action="{% url 'orders:add_to_cart' %}">
+            {% csrf_token %}
+            <input type="hidden" name="content_type" value="catalog.product">
+            <input type="hidden" name="object_id" value="{{ product.id }}">
+            
+            <div class="row g-3 align-items-end">
+              <div class="col-auto">
+                <label for="qty" class="form-label text-light small mb-1">{% trans "Quantity" %}</label>
+                <input type="number" name="qty" id="qty" value="1" min="1" max="10" 
+                       class="form-control bg-dark text-white border-secondary" 
+                       style="width: 80px;">
+              </div>
+              <div class="col">
+                {% if product.is_active %}
+                <button type="submit" class="btn btn-danger btn-lg w-100">
+                  <i class="bi bi-cart-plus me-2"></i>{% trans "Add to Cart" %}
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-secondary btn-lg w-100" disabled>
+                  <i class="bi bi-x-circle me-2"></i>{% trans "Not Available" %}
+                </button>
+                {% endif %}
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Mystery Boxes donde aparece -->
+      {% if mystery_boxes %}
+      <div class="alert alert-warning bg-warning bg-opacity-10 border-warning">
+        <h3 class="h6 text-warning mb-3">
+          <i class="bi bi-gift-fill me-2"></i>{% trans "Found in Mystery Boxes" %}
+        </h3>
+        <p class="small text-light mb-3" style="opacity: 0.85;">
+          {% trans "You could get this product at a discount by buying one of these mystery boxes!" %}
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          {% for box in mystery_boxes %}
+          <a href="{% url 'mistery_boxes:detail' box.slug %}" 
+             class="btn btn-outline-warning btn-sm">
+            <i class="bi bi-box-seam me-1"></i>{{ box.name }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Información adicional -->
+      <div class="card bg-dark border-secondary">
+        <div class="card-header bg-secondary bg-opacity-10 border-secondary">
+          <h2 class="h6 mb-0 text-white">
+            <i class="bi bi-info-circle me-2"></i>{% trans "Product Information" %}
+          </h2>
+        </div>
+        <div class="card-body">
+          <table class="table table-dark table-sm mb-0">
+            <tbody>
+              <tr>
+                <td class="text-light" style="opacity: 0.7; width: 40%;">{% trans "Product ID" %}</td>
+                <td class="text-white fw-semibold">#{{ product.id }}</td>
+              </tr>
+              {% if product.category %}
+              <tr>
+                <td class="text-light" style="opacity: 0.7;">{% trans "Category" %}</td>
+                <td class="text-white">{{ product.category.name }}</td>
+              </tr>
+              {% endif %}
+              <tr>
+                <td class="text-light" style="opacity: 0.7;">{% trans "Price" %}</td>
+                <td class="text-success fw-bold">$ {{ product.price_cop|intcomma }} COP</td>
+              </tr>
+              <tr>
+                <td class="text-light" style="opacity: 0.7;">{% trans "Status" %}</td>
+                <td>
+                  {% if product.is_active %}
+                    <span class="badge bg-success">{% trans "Active" %}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{% trans "Inactive" %}</span>
+                  {% endif %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Productos relacionados -->
+{% if related_products %}
+<section class="mt-5 pt-5 border-top border-secondary">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="h4 text-white mb-0">
+      <i class="bi bi-grid-3x3-gap me-2 text-danger"></i>{% trans "Related Products" %}
+    </h2>
+    <a href="{% url 'catalog:list' %}?category={{ product.category.id }}" class="btn btn-outline-danger btn-sm">
+      {% trans "View all" %} <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+
+  <div class="row g-4">
+    {% for related in related_products %}
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+      <div class="card bg-dark border-secondary h-100 hover-rise">
+        <a href="{% url 'catalog:detail' related.slug %}" class="text-decoration-none">
+          <img src="{{ related.image.url }}" 
+               class="card-img-top" 
+               alt="{{ related.name }}"
+               style="object-fit: cover; height: 150px;">
+          <div class="card-body">
+            <h3 class="h6 text-white mb-2" style="min-height: 40px;">{{ related.name|truncatewords:5 }}</h3>
+            <div class="text-danger fw-bold">$ {{ related.price_cop|intcomma }}</div>
+            
+            {% if related.mystery_boxes.exists %}
+            <div class="mt-2">
+              <span class="badge bg-warning text-dark small">
+                <i class="bi bi-gift-fill"></i>
+              </span>
+            </div>
+            {% endif %}
+          </div>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Botón volver -->
+<div class="mt-5 text-center">
+  <a href="{% url 'catalog:list' %}" class="btn btn-outline-light">
+    <i class="bi bi-arrow-left me-2"></i>{% trans "Back to Catalog" %}
+  </a>
+</div>
+{% endblock %}

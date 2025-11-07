@@ -1,7 +1,10 @@
 from django.views.generic import TemplateView
 from django.utils.translation import gettext as _
 from mistery_boxes.models import MysteryBox
-
+from catalog.models import Product
+import random
+import requests
+from django.http import JsonResponse
 
 class HomeView(TemplateView):
     template_name = "pages/home.html"
@@ -9,38 +12,42 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        ctx["boxes"] = MysteryBox.objects.all()[:4]
+        # Mystery boxes reales (máximo 4 para el home)
+        ctx["boxes"] = MysteryBox.objects.filter(is_active=True).prefetch_related('products')[:4]
 
-        ctx["products"] = [
-            {
-                "title": _("Limited Edition Sneakers"),
-                "alt": _("Designer Sneakers"),
-                "desc": _("Exclusive designer sneakers from top luxury brands"),
-                "price": 180,
-                "found_in": [
-                    (_("Fashion Mystery ($49)"), _("Save $131")),
-                    (_("Ultimate Mystery ($199)"), _("Guaranteed + More")),
-                ],
-            },
-            {
-                "title": _("Pro Wireless Earbuds"),
-                "alt": _("Wireless Earbuds"),
-                "desc": _("Latest noise-canceling wireless earbuds with premium sound"),
-                "price": 249,
-                "found_in": [
-                    (_("Tech Mystery ($99)"), _("Save $150")),
-                    (_("Ultimate Mystery ($199)"), _("Save $50")),
-                ],
-            },
-            {
-                "title": _("Luxury Smart Watch"),
-                "alt": _("Smart Watch"),
-                "desc": _("Premium smartwatch with health tracking and luxury design"),
-                "price": 399,
-                "found_in": [
-                    (_("Tech Mystery ($99)"), _("Save $300")),
-                    (_("Ultimate Mystery ($199)"), _("Save $200")),
-                ],
-            },
-        ]
+        # Productos destacados reales (6 productos aleatorios)
+        all_products = list(Product.objects.filter(is_active=True).prefetch_related('mystery_boxes'))
+        ctx["featured_products"] = random.sample(all_products, min(6, len(all_products)))
+
+        # Estadísticas reales
+        total_boxes = MysteryBox.objects.filter(is_active=True).count()
+        total_products = Product.objects.filter(is_active=True).count()
+        products_in_boxes = Product.objects.filter(mystery_boxes__isnull=False, is_active=True).distinct().count()
+        
+        ctx["stats"] = {
+            "boxes_count": total_boxes,
+            "products_count": total_products,
+            "products_in_boxes": products_in_boxes,
+        }
+
         return ctx
+
+def surprise_quote(request):
+    """
+    Retorna una frase inspiradora o misteriosa desde una API pública externa.
+    Ideal para mostrar en la cabecera de la página.
+    """
+    try:
+        res = requests.get("https://zenquotes.io/api/random", timeout=5)
+        if res.status_code == 200:
+            data = res.json()[0]
+            return JsonResponse({
+                "quote": data.get("q", "La vida está llena de sorpresas."),
+                "author": data.get("a", "Anónimo")
+            })
+    except Exception:
+        pass
+    return JsonResponse({
+        "quote": "La vida está llena de sorpresas.",
+        "author": "MysteryVault"
+    })

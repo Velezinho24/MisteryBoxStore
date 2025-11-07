@@ -65,6 +65,20 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField()
     unit_price_cop = models.PositiveIntegerField()
     line_total_cop = models.PositiveIntegerField()
+    
+    # Para mystery boxes: el producto ganado
+    won_product = models.ForeignKey(
+        'catalog.Product', 
+        null=True, 
+        blank=True, 
+        on_delete=models.SET_NULL,
+        related_name='won_in_orders',
+        help_text="Si este item es una mystery box, este campo indica qué producto se ganó"
+    )
+    
+    # Indica si este item es una mystery box
+    is_mystery_box = models.BooleanField(default=False)
+    mystery_box_id = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} x {self.quantity}"

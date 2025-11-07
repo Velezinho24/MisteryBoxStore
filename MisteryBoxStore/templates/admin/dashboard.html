@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+
+{% block title %}{% trans "Admin Dashboard" %} · MysteryVault{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="text-white mb-1">
+            <i class="bi bi-speedometer2 text-danger me-2"></i>{% trans "Admin Dashboard" %}
+          </h2>
+          <p class="text-light mb-0" style="opacity: 0.7;">
+            {% trans "Sales and performance overview" %}
+          </p>
+        </div>
+        
+        <!-- Period Selector -->
+        <div>
+          <div class="btn-group" role="group">
+            <a href="?period=7" class="btn btn-sm {% if period == 7 %}btn-danger{% else %}btn-outline-danger{% endif %}">7 {% trans "days" %}</a>
+            <a href="?period=30" class="btn btn-sm {% if period == 30 %}btn-danger{% else %}btn-outline-danger{% endif %}">30 {% trans "days" %}</a>
+            <a href="?period=90" class="btn btn-sm {% if period == 90 %}btn-danger{% else %}btn-outline-danger{% endif %}">90 {% trans "days" %}</a>
+            <a href="?period=365" class="btn btn-sm {% if period == 365 %}btn-danger{% else %}btn-outline-danger{% endif %}">1 {% trans "year" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Quick Stats Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card bg-dark border-success h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-light mb-1" style="opacity: 0.7;">{% trans "Total Sales" %}</p>
+              <h3 class="text-success mb-0">$ {{ total_sales|intcomma }}</h3>
+              <small class="text-light" style="opacity: 0.6;">{% trans "Last" %} {{ period }} {% trans "days" %}</small>
+            </div>
+            <i class="bi bi-cash-stack text-success fs-1" style="opacity: 0.3;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card bg-dark border-info h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-light mb-1" style="opacity: 0.7;">{% trans "Total Orders" %}</p>
+              <h3 class="text-info mb-0">{{ total_orders|intcomma }}</h3>
+              <small class="text-light" style="opacity: 0.6;">{% trans "Avg" %}: $ {{ avg_order_value|floatformat:0|intcomma }}</small>
+            </div>
+            <i class="bi bi-cart-check text-info fs-1" style="opacity: 0.3;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card bg-dark border-warning h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-light mb-1" style="opacity: 0.7;">{% trans "Total Users" %}</p>
+              <h3 class="text-warning mb-0">{{ total_users|intcomma }}</h3>
+              <small class="text-success">+{{ new_users }} {% trans "new" %}</small>
+            </div>
+            <i class="bi bi-people text-warning fs-1" style="opacity: 0.3;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card bg-dark border-danger h-100">
+        <div class="card-body text-center">
+          <p class="text-light mb-2" style="opacity: 0.7;">{% trans "Quick Actions" %}</p>
+          <div class="d-grid gap-2">
+            <a href="/admin/catalog/product/" class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-box-seam me-1"></i>{% trans "Manage Products" %}
+            </a>
+            <a href="/admin/mistery_boxes/mysterybox/" class="btn btn-sm btn-outline-warning">
+              <i class="bi bi-gift me-1"></i>{% trans "Manage Boxes" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Charts and Tables -->
+  <div class="row g-4">
+    
+    <!-- Top Products -->
+    <div class="col-12 col-lg-6">
+      <div class="card bg-dark border-danger-subtle">
+        <div class="card-header bg-danger bg-opacity-10 border-danger">
+          <h5 class="mb-0 text-white">
+            <i class="bi bi-trophy me-2"></i>{% trans "Top Selling Products" %}
+          </h5>
+        </div>
+        <div class="card-body">
+          {% if top_products %}
+          <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>{% trans "Product" %}</th>
+                  <th class="text-end">{% trans "Sold" %}</th>
+                  <th class="text-end">{% trans "Revenue" %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in top_products %}
+                <tr>
+                  <td class="text-warning fw-bold">{{ forloop.counter }}</td>
+                  <td>{{ item.name|truncatewords:5 }}</td>
+                  <td class="text-end">{{ item.total_sold }}</td>
+                  <td class="text-end text-success">$ {{ item.revenue|intcomma }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-light text-center mb-0" style="opacity: 0.5;">{% trans "No sales data available" %}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Top Mystery Boxes -->
+    <div class="col-12 col-lg-6">
+      <div class="card bg-dark border-warning-subtle">
+        <div class="card-header bg-warning bg-opacity-10 border-warning">
+          <h5 class="mb-0 text-white">
+            <i class="bi bi-gift me-2"></i>{% trans "Top Mystery Boxes" %}
+          </h5>
+        </div>
+        <div class="card-body">
+          {% if top_boxes %}
+          <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>{% trans "Box" %}</th>
+                  <th class="text-end">{% trans "Sold" %}</th>
+                  <th class="text-end">{% trans "Revenue" %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in top_boxes %}
+                <tr>
+                  <td class="text-warning fw-bold">{{ forloop.counter }}</td>
+                  <td>{{ item.name|truncatewords:5 }}</td>
+                  <td class="text-end">{{ item.total_sold }}</td>
+                  <td class="text-end text-success">$ {{ item.revenue|intcomma }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-light text-center mb-0" style="opacity: 0.5;">{% trans "No mystery box sales" %}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Most Won Products -->
+    <div class="col-12">
+      <div class="card bg-dark border-info-subtle">
+        <div class="card-header bg-info bg-opacity-10 border-info">
+          <h5 class="mb-0 text-white">
+            <i class="bi bi-star me-2"></i>{% trans "Most Won Products (Mystery Boxes)" %}
+          </h5>
+        </div>
+        <div class="card-body">
+          {% if top_won_products %}
+          <div class="row g-3">
+            {% for item in top_won_products %}
+            <div class="col-6 col-md-4 col-lg-2">
+              <div class="card bg-black border-secondary text-center">
+                <div class="card-body py-3">
+                  <h6 class="text-white small mb-1">{{ item.won_product__name|truncatewords:3 }}</h6>
+                  <span class="badge bg-info">{{ item.times_won }}x</span>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="text-light text-center mb-0" style="opacity: 0.5;">{% trans "No mystery box wins yet" %}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+{% endblock %}

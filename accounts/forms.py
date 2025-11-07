@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
+from .models import UserProfile
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -42,3 +43,79 @@ class UserRegistrationForm(UserCreationForm):
         self.fields["username"].help_text = ""
         self.fields["password1"].help_text = ""
         self.fields["password2"].help_text = ""
+
+
+class UserUpdateForm(forms.ModelForm):
+    """Formulario para actualizar información básica del usuario"""
+    email = forms.EmailField(
+        required=True,
+        label=_("Email"),
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control bg-dark text-white border-secondary',
+            'placeholder': 'you@example.com'
+        })
+    )
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+        labels = {
+            'username': _('Username'),
+            'first_name': _('First Name'),
+            'last_name': _('Last Name'),
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'readonly': 'readonly'
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'placeholder': _('First Name')
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'placeholder': _('Last Name')
+            }),
+        }
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    """Formulario para actualizar el perfil extendido del usuario"""
+    class Meta:
+        model = UserProfile
+        fields = ['phone', 'address', 'city', 'country', 'postal_code', 'receive_notifications']
+        labels = {
+            'phone': _('Phone Number'),
+            'address': _('Address'),
+            'city': _('City'),
+            'country': _('Country'),
+            'postal_code': _('Postal Code'),
+            'receive_notifications': _('Receive Email Notifications'),
+        }
+        widgets = {
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'placeholder': '+57 300 123 4567'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'placeholder': _('Full address'),
+                'rows': 3
+            }),
+            'city': forms.TextInput(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'placeholder': 'Bogotá'
+            }),
+            'country': forms.TextInput(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'placeholder': 'Colombia'
+            }),
+            'postal_code': forms.TextInput(attrs={
+                'class': 'form-control bg-dark text-white border-secondary',
+                'placeholder': '110111'
+            }),
+            'receive_notifications': forms.CheckboxInput(attrs={
+                'class': 'form-check-input bg-dark border-secondary'
+            }),
+        }

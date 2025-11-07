@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from .models import Category
 
 TAG_CHOICES = [
     ("ropa", _("Clothing")),
@@ -34,6 +35,15 @@ class CatalogFilterForm(forms.Form):
         widget=forms.TextInput(attrs={
             "class": "form-control bg-black text-white border-secondary",
             "placeholder": _("Search products…"),
+        }),
+    )
+    category = forms.ModelChoiceField(
+        required=False,
+        queryset=Category.objects.all(),
+        label=_("Category"),
+        empty_label=_("All categories"),
+        widget=forms.Select(attrs={
+            "class": "form-select bg-black text-white border-secondary",
         }),
     )
     tags = forms.MultipleChoiceField(

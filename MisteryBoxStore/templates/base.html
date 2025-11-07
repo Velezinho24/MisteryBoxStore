@@ -19,6 +19,8 @@
     }
     .hover-rise { transition: transform .2s ease, box-shadow .2s ease; }
     .hover-rise:hover { transform: translateY(-4px); box-shadow: 0 0.5rem 1.5rem rgba(220,53,69,.25); }
+    .hover-text-danger { transition: color .2s ease; }
+    .hover-text-danger:hover { color: #dc3545 !important; }
   </style>
 
   {% block extra_head %}{% endblock %}
@@ -52,6 +54,27 @@
 
 
 <body class="bg-black">
+  <body class="bg-black">
+
+  <!-- Barra misteriosa superior -->
+  <div id="mystery-quote" class="text-center py-2 bg-dark text-light small">
+    <span id="quote-text">Descubre la frase misteriosa del día...</span>
+  </div>
+
+  <script>
+    // Cargar frase misteriosa desde la API externa
+    fetch("/api/surprise/")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("quote-text").innerText =
+          `"${data.quote}" — ${data.author}`;
+      })
+      .catch(() => {
+        document.getElementById("quote-text").innerText =
+          "La vida está llena de sorpresas. — MysteryVault";
+      });
+  </script>
+
   <!-- Header / Navbar -->
   <header class="border-bottom border-danger-subtle bg-black bg-opacity-95">
     <nav class="navbar navbar-expand-lg navbar-dark container">
@@ -71,7 +94,27 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'catalog:list' %}">{% trans "Catalog" %}</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'mistery_boxes:list' %}">{% trans "Mystery Boxes" %}</a></li>
           {% if user.is_staff %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'mistery_boxes:create' %}">{% trans "Create Box" %}</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-danger" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-shield-lock me-1"></i>{% trans "Admin" %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end bg-dark border-danger" aria-labelledby="adminDropdown">
+              <li><a class="dropdown-item text-light" href="{% url 'admin_dashboard' %}">
+                <i class="bi bi-speedometer2 me-2"></i>{% trans "Dashboard" %}
+              </a></li>
+              <li><hr class="dropdown-divider border-secondary"></li>
+              <li><a class="dropdown-item text-light" href="/admin/catalog/product/">
+                <i class="bi bi-box-seam me-2"></i>{% trans "Manage Products" %}
+              </a></li>
+              <li><a class="dropdown-item text-light" href="/admin/mistery_boxes/mysterybox/">
+                <i class="bi bi-gift me-2"></i>{% trans "Manage Mystery Boxes" %}
+              </a></li>
+              <li><hr class="dropdown-divider border-secondary"></li>
+              <li><a class="dropdown-item text-warning" href="/admin/">
+                <i class="bi bi-gear me-2"></i>{% trans "Django Admin" %}
+              </a></li>
+            </ul>
+          </li>
           {% endif %}
         </ul>
 
@@ -90,9 +133,26 @@
             </select>
           </form>
           {% if user.is_authenticated %}
-            <span class="navbar-text me-3">{% trans "Hi" %}, {{ user.username }}!</span>
-            <a href="{% url 'orders:list' %}" class="btn btn-danger" style="margin-right: 10px;">{% trans "Cart" %}</a>
-            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light">{% trans "Logout" %}</a>
+            <div class="dropdown me-3">
+              <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle me-1"></i>{{ user.username }}
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item text-light" href="{% url 'accounts:profile' %}">
+                  <i class="bi bi-person-gear me-2"></i>{% trans "My Profile" %}
+                </a></li>
+                <li><a class="dropdown-item text-light" href="{% url 'orders:list' %}">
+                  <i class="bi bi-cart me-2"></i>{% trans "My Cart" %}
+                </a></li>
+                <li><hr class="dropdown-divider border-secondary"></li>
+                <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
+                  <i class="bi bi-box-arrow-right me-2"></i>{% trans "Logout" %}
+                </a></li>
+              </ul>
+            </div>
+            <a href="{% url 'orders:list' %}" class="btn btn-danger">
+              <i class="bi bi-cart me-1"></i>{% trans "Cart" %}
+            </a>
           {% else %}
             <a href="{% url 'accounts:login' %}" class="btn btn-danger" style="margin-right: 10px;">{% trans "Cart" %}</a>
             <a href="{% url 'accounts:login' %}" class="btn btn-outline-light me-2">{% trans "Login" %}</a>

@@ -1,116 +1,127 @@
-{% extends "base.html" %}
-{% load i18n static %}
-{% load humanize %}
+﻿{% extends "base.html" %}
+{% load i18n static humanize %}
 
 {% block title %}{% trans "Catalog" %} · MysteryVault{% endblock %}
 
 {% block content %}
 <div class="row g-4">
-  <!-- Sidebar filtros (en pantallas md+) -->
+  <!-- Sidebar filtros -->
   <aside class="col-12 col-lg-3 order-2 order-lg-1">
-    <div class="card bg-dark border-danger-subtle">
-      <div class="card-header bg-black border-danger-subtle">
-        <h2 class="h6 mb-0 text-white">{% trans "Filters" %}</h2>
+    <div class="card bg-dark border-danger-subtle sticky-top" style="top: 20px;">
+      <div class="card-header bg-danger bg-opacity-10 border-danger-subtle">
+        <h2 class="h6 mb-0 text-white">
+          <i class="bi bi-funnel me-2"></i>{% trans "Filters" %}
+        </h2>
       </div>
       <div class="card-body">
-        <form method="get" class="vstack gap-3" id="filters-form">
-
-          <!-- Búsqueda -->
+        <form method="get" class="vstack gap-3">
           <div>
-            <label for="id_q" class="form-label text-white">{% trans "Search" %}</label>
+            <label for="id_q" class="form-label text-light fw-semibold">
+              <i class="bi bi-search me-1"></i>{% trans "Search" %}
+            </label>
             {{ form.q }}
           </div>
-
-          <!-- Precio -->
           <div>
-            <label class="form-label text-white">{% trans "Price range (COP)" %}</label>
+            <label for="id_category" class="form-label text-light fw-semibold">
+              <i class="bi bi-tag me-1"></i>{% trans "Category" %}
+            </label>
+            {{ form.category }}
+          </div>
+          <div>
+            <label class="form-label text-light fw-semibold">
+              <i class="bi bi-cash me-1"></i>{% trans "Price range (COP)" %}
+            </label>
             <div class="row g-2">
-              <div class="col">
-                {{ form.price_min }}
-              </div>
-              <div class="col">
-                {{ form.price_max }}
-              </div>
+              <div class="col-6">{{ form.price_min }}</div>
+              <div class="col-6">{{ form.price_max }}</div>
             </div>
           </div>
-
-          <!-- Tags -->
           <div>
-            <span class="form-label d-block mb-2 text-white">{% trans "Tags" %}</span>
-            <div class="vstack gap-2">
+            <span class="form-label d-block mb-2 text-light fw-semibold">
+              <i class="bi bi-tags me-1"></i>{% trans "Tags" %}
+            </span>
+            <div class="vstack gap-2" style="max-height: 200px; overflow-y: auto;">
               {% for checkbox in form.tags %}
               <div class="form-check">
                 {{ checkbox.tag }}
-                <label class="form-check-label text-white" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                <label class="form-check-label text-light" for="{{ checkbox.id_for_label }}">
+                  {{ checkbox.choice_label }}
+                </label>
               </div>
               {% endfor %}
             </div>
           </div>
-
-          <!-- Orden -->
           <div>
-            <label for="id_order" class="form-label text-white">{% trans "Order by" %}</label>
+            <label for="id_order" class="form-label text-light fw-semibold">
+              <i class="bi bi-sort-down me-1"></i>{% trans "Order by" %}
+            </label>
             {{ form.order }}
           </div>
-
-          <!-- Acciones -->
           <div class="d-grid gap-2 mt-2">
-            <button type="submit" class="btn btn-danger">{% trans "Apply filters" %}</button>
-            <a href="{% url 'catalog:list' %}" class="btn btn-outline-light">{% trans "Clear" %}</a>
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-check2-circle me-1"></i>{% trans "Apply filters" %}
+            </button>
+            <a href="{% url 'catalog:list' %}" class="btn btn-outline-light">
+              <i class="bi bi-x-circle me-1"></i>{% trans "Clear" %}
+            </a>
           </div>
-
         </form>
       </div>
     </div>
   </aside>
-
-  <!-- Listado -->
   <section class="col-12 col-lg-9 order-1 order-lg-2">
-    <!-- Header listado -->
-    <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-danger-subtle">
       <div>
-        <h1 class="h4 mb-1">{% trans "Catalog" %}</h1>
-        <div class="text-secondary small">
-          {% blocktrans %}Showing{% endblocktrans %} {{ page_obj.start_index }}–{{ page_obj.end_index }} / {{ total }}
-          {% if q %} · {% trans "Search:" %} “{{ q }}”{% endif %}
+        <h1 class="h3 mb-1 text-white">
+          <i class="bi bi-grid-3x3-gap-fill text-danger me-2"></i>{% trans "Product Catalog" %}
+        </h1>
+        <div class="text-light small" style="opacity: 0.75;">
+          {% trans "Showing" %} <span class="text-danger fw-bold">{{ page_obj.start_index }}</span>–<span class="text-danger fw-bold">{{ page_obj.end_index }}</span> 
+          {% trans "of" %} <span class="text-danger fw-bold">{{ total }}</span>
         </div>
       </div>
     </div>
-
-    <!-- Chips de tags activos -->
-    {% if active_tags %}
-    <div class="mb-3">
-      {% for t in active_tags %}
-        <span class="badge text-bg-dark border border-danger-subtle me-2">{{ t }}</span>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- Grid de productos -->
-    <div class="row g-3">
+    <div class="row g-4">
       {% for p in products %}
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card bg-dark border-danger-subtle h-100 hover-rise">
-          {% if p.image %}
-            <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}">
-          {% else %}
-            <img src="{% static 'img/placeholder-300x200.png' %}" class="card-img-top" alt="{{ p.name }}">
-          {% endif %}
+          <a href="{% url 'catalog:detail' p.slug %}" class="text-decoration-none">
+            {% load static %}
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'img/item_default.png' %}" alt="{{ product.name }}">
+            {% endif %}
+          </a>
           <div class="card-body d-flex flex-column">
-            <h3 class="h6 mb-1 text-white">{{ p.name }}</h3>
-            <div class="small text-secondary mb-2">
-              {% if p.tags %}{{ p.tags }}{% endif %}
+            <a href="{% url 'catalog:detail' p.slug %}" class="text-decoration-none">
+              <h3 class="h6 mb-2 text-white hover-text-danger">{{ p.name }}</h3>
+            </a>
+            <div class="small mb-2">
+              {% if p.category %}
+                <span class="badge bg-danger-subtle text-danger border border-danger me-1">{{ p.category.name }}</span>
+              {% endif %}
             </div>
-            <div class="mt-auto d-flex align-items-center justify-content-between">
-              <div class="fw-bold text-danger">$ {{ p.price_cop|intcomma }}</div>
-
-              <form method="post" action="{% url 'orders:add_to_cart' %}" class="d-inline">
+            {% if p.mystery_boxes.exists %}
+              <div class="mb-2">
+                {% for box in p.mystery_boxes.all|slice:":1" %}
+                  <a href="{% url 'mistery_boxes:detail' box.slug %}" class="badge bg-warning text-dark text-decoration-none">
+                    <i class="bi bi-gift-fill me-1"></i>{% trans "In Mystery Box" %}
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <div class="mt-auto d-flex align-items-center justify-content-between pt-2 border-top border-secondary">
+              <a href="{% url 'catalog:detail' p.slug %}" class="text-decoration-none">
+                <div class="fw-bold text-danger fs-5">$ {{ p.price_cop|intcomma }}</div>
+              </a>
+              <form method="post" action="{% url 'orders:add_to_cart' %}">
                 {% csrf_token %}
                 <input type="hidden" name="content_type" value="catalog.product">
                 <input type="hidden" name="object_id" value="{{ p.id }}">
                 <input type="hidden" name="qty" value="1">
                 <button type="submit" class="btn btn-danger btn-sm">
-                  {% trans "Add to cart" %}
+                  <i class="bi bi-cart-plus"></i> {% trans "Add" %}
                 </button>
               </form>
             </div>
@@ -119,48 +130,31 @@
       </div>
       {% empty %}
       <div class="col-12">
-        <div class="alert alert-dark border-danger-subtle text-center">
-          {% trans "No products match your filters." %}
+        <div class="alert alert-warning text-center">
+          <i class="bi bi-exclamation-triangle me-2"></i>{% trans "No products match your filters." %}
         </div>
       </div>
       {% endfor %}
     </div>
-
-    <!-- Paginación -->
     {% if is_paginated %}
-    <nav class="mt-4" aria-label="{% trans 'Pagination' %}">
+    <nav class="mt-5">
       <ul class="pagination pagination-sm justify-content-center">
         {% if page_obj.has_previous %}
           <li class="page-item">
-            <a class="page-link bg-black text-white border-secondary"
-               href="?{% if request.GET %}{{ request.GET.urlencode|safe|cut:'page='|cut:'&page=' }}&{% endif %}page={{ page_obj.previous_page_number }}">
-              &laquo;
+            <a class="page-link bg-dark text-light border-secondary" href="?page={{ page_obj.previous_page_number }}">
+              <i class="bi bi-chevron-left"></i>
             </a>
           </li>
-        {% else %}
-          <li class="page-item disabled"><span class="page-link bg-black text-secondary border-secondary">&laquo;</span></li>
         {% endif %}
-
-        {% for num in paginator.page_range %}
-          {% if num == page_obj.number %}
-            <li class="page-item active"><span class="page-link bg-danger border-danger">{{ num }}</span></li>
-          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <li class="page-item">
-              <a class="page-link bg-black text-white border-secondary"
-                 href="?{% if request.GET %}{{ request.GET.urlencode|safe|cut:'page='|cut:'&page=' }}&{% endif %}page={{ num }}">{{ num }}</a>
-            </li>
-          {% endif %}
-        {% endfor %}
-
+        <li class="page-item active">
+          <span class="page-link bg-danger border-danger">{{ page_obj.number }}</span>
+        </li>
         {% if page_obj.has_next %}
           <li class="page-item">
-            <a class="page-link bg-black text-white border-secondary"
-               href="?{% if request.GET %}{{ request.GET.urlencode|safe|cut:'page='|cut:'&page=' }}&{% endif %}page={{ page_obj.next_page_number }}">
-              &raquo;
+            <a class="page-link bg-dark text-light border-secondary" href="?page={{ page_obj.next_page_number }}">
+              <i class="bi bi-chevron-right"></i>
             </a>
           </li>
-        {% else %}
-          <li class="page-item disabled"><span class="page-link bg-black text-secondary border-secondary">&raquo;</span></li>
         {% endif %}
       </ul>
     </nav>

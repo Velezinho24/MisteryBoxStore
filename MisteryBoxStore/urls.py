@@ -19,7 +19,9 @@ from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 from orders.views import cart_detail
+from .admin_views import admin_dashboard, sales_report, user_report
 
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),  # set_language
@@ -34,6 +36,11 @@ urlpatterns += i18n_patterns(
     path("orders/", include(("orders.urls", "orders"), namespace="orders")),
     path("payments/", include(("payments.urls", "payments"), namespace="payments")),
     path("cart/", cart_detail, name="cart_root"),
+    path("api/surprise/", views.surprise_quote, name="surprise_quote"),
+    # Admin Reports
+    path("admin-dashboard/", admin_dashboard, name="admin_dashboard"),
+    path("admin-reports/sales/", sales_report, name="sales_report"),
+    path("admin-reports/users/", user_report, name="user_report"),
 )
 
 
