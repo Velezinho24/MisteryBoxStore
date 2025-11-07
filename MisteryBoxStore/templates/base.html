@@ -54,6 +54,27 @@
 
 
 <body class="bg-black">
+  <body class="bg-black">
+
+  <!-- Barra misteriosa superior -->
+  <div id="mystery-quote" class="text-center py-2 bg-dark text-light small">
+    <span id="quote-text">Descubre la frase misteriosa del día...</span>
+  </div>
+
+  <script>
+    // Cargar frase misteriosa desde la API externa
+    fetch("/api/surprise/")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("quote-text").innerText =
+          `"${data.quote}" — ${data.author}`;
+      })
+      .catch(() => {
+        document.getElementById("quote-text").innerText =
+          "La vida está llena de sorpresas. — MysteryVault";
+      });
+  </script>
+
   <!-- Header / Navbar -->
   <header class="border-bottom border-danger-subtle bg-black bg-opacity-95">
     <nav class="navbar navbar-expand-lg navbar-dark container">

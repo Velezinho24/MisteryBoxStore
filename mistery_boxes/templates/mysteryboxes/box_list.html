@@ -25,7 +25,12 @@
         </span>
       </div>
       {% endif %}
-      <img src="{{ box.image.url }}" class="card-img-top" alt="{{ box.name }}" style="object-fit: cover; height: 240px;">
+      {% load static %}
+      {% if box.image %}
+          <img src="{{ box.image.url }}" alt="{{ box.name }}">
+      {% else %}
+          <img src="{% static 'img/box_default.png' %}" alt="{{ box.name }}">
+      {% endif %}
       <div class="card-body d-flex flex-column">
         <h2 class="h5 mb-2 text-white">{{ box.name }}</h2>
         <p class="text-light small mb-3" style="opacity: 0.75;">{{ box.description|truncatewords:20 }}</p>

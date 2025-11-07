@@ -3,7 +3,8 @@ from django.utils.translation import gettext as _
 from mistery_boxes.models import MysteryBox
 from catalog.models import Product
 import random
-
+import requests
+from django.http import JsonResponse
 
 class HomeView(TemplateView):
     template_name = "pages/home.html"
@@ -30,3 +31,23 @@ class HomeView(TemplateView):
         }
 
         return ctx
+
+def surprise_quote(request):
+    """
+    Retorna una frase inspiradora o misteriosa desde una API pública externa.
+    Ideal para mostrar en la cabecera de la página.
+    """
+    try:
+        res = requests.get("https://zenquotes.io/api/random", timeout=5)
+        if res.status_code == 200:
+            data = res.json()[0]
+            return JsonResponse({
+                "quote": data.get("q", "La vida está llena de sorpresas."),
+                "author": data.get("a", "Anónimo")
+            })
+    except Exception:
+        pass
+    return JsonResponse({
+        "quote": "La vida está llena de sorpresas.",
+        "author": "MysteryVault"
+    })
